@@ -122,8 +122,10 @@ LOGOUT_REDIRECT_URL = 'core:home'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # 👇 CONFIGURACIÓN PARA RENDER (al final del archivo)
+import os
 import dj_database_url
 
+# Solo ejecutar esta configuración si estamos en Render
 if 'RENDER' in os.environ:
     # Estamos en Render.com
     DEBUG = False
