@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Barbería Elite - Inicio{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section text-white text-center d-flex align-items-center" 
+         style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                url('https://images.unsplash.com/photo-1585747861815-0468f061d1ec?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80') center/cover no-repeat; 
+                height: 80vh;">
+  <div class="container">
+    <h1 class="display-3 fw-bold mb-4">Bienvenido a la Barbería Don RinoSan</h1>
+    <p class="lead mb-4">Tu estilo es nuestra prioridad. Descubre nuestros servicios premium.</p>
+    <a href="{% url 'servicios:lista' %}" class="btn btn-warning btn-lg me-2">Ver Servicios</a>
+    {% if user.is_authenticated %}
+      <a href="{% url 'reservas:disponibilidades' %}" class="btn btn-outline-light btn-lg">Reservar Ahora</a>
+    {% else %}
+      <a href="{% url 'usuarios:login' %}" class="btn btn-outline-light btn-lg">Reservar Ahora</a>
+    {% endif %}
+  </div>
+</section>
+
+<!-- Services Section -->
+<section id="services" class="py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold">Nuestros Servicios</h2>
+      <p class="lead text-muted">Explora nuestros servicios antes de registrarte o iniciar sesión</p>
+    </div>
+
+    <div class="row">
+      {% for servicio in servicios %}
+        <div class="col-md-4 mb-4">
+          <div class="card service-card h-100 shadow-sm border-0">
+            <div class="card-body text-center p-4">
+              <div class="service-icon mb-3">
+                <i class="fas fa-cut fa-2x" style="color:#d4af37;"></i>
+              </div>
+              <h5 class="card-title fw-bold">{{ servicio.nombre }}</h5>
+              <p class="card-text text-muted">{{ servicio.descripcion }}</p>
+              <p class="price-tag fw-bold">${{ servicio.precio }}</p>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div class="col-12">
+          <div class="alert alert-info text-center">
+            <i class="fas fa-info-circle fa-2x mb-2"></i>
+            <h5>No hay servicios disponibles por ahora</h5>
+            <p>Pronto agregaremos nuevos servicios. ¡Vuelve a visitarnos!</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="text-center mt-5">
+      {% if not user.is_authenticated %}
+        <a href="{% url 'usuarios:login' %}" class="btn btn-primary btn-lg me-3">Iniciar Sesión</a>
+        <a href="{% url 'usuarios:registro' %}" class="btn btn-outline-primary btn-lg">Registrarse</a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

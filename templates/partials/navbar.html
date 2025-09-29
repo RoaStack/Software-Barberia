@@ -1,0 +1,42 @@
+<nav class="navbar navbar-expand-lg navbar-dark">
+  <div class="container">
+    <a class="navbar-brand" href="{% url 'core:home' %}">
+      <i class="fas fa-cut me-2"></i>Barbería Elite
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'core:home' %}">Inicio</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'servicios:lista' %}">Servicios</a>
+        </li>
+
+        {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'usuarios:dashboard' %}">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <!-- Logout como formulario -->
+            <form method="post" action="{% url 'usuarios:logout' %}">
+              {% csrf_token %}
+              <button type="submit" class="nav-link btn btn-link" style="color:rgb(168, 164, 164); text-decoration:none;">
+                Cerrar sesión
+              </button>
+            </form>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'usuarios:login' %}">Iniciar sesión</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'usuarios:registro' %}">Registrarse</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>

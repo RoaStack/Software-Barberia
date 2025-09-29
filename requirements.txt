@@ -1,0 +1,7 @@
+asgiref==3.9.2
+dj-database-url==0.5.0
+Django==5.2.6
+django-crispy-forms==2.4
+pillow==11.3.0
+sqlparse==0.5.3
+tzdata==2025.2

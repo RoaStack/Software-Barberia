@@ -1,0 +1,31 @@
+# Entornos virtuales
+venv/
+.venv/
+env/
+
+# Base de datos SQLite
+*.sqlite3
+*.db
+db.sqlite3
+
+# Archivos de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Django
+media/
+staticfiles/
+
+# Archivos de entorno
+.env
+*.env
+
+# IDE
+.vscode/
+.idea/
+
+# Sistema
+.DS_Store
+Thumbs.db

@@ -1,0 +1,44 @@
+{% extends "base_cliente.html" %}
+{% block cliente_content %}
+<div class="container py-4">
+  <h3 class="mb-4">Disponibilidades de Barberos</h3>
+  <table class="table table-hover align-middle">
+    <thead class="table-dark">
+      <tr>
+        <th>Barbero</th>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Estado</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for disp in disponibilidades %}
+        <tr>
+          <td>{{ disp.barbero.usuario.get_full_name|default:disp.barbero.usuario.username }}</td>
+          <td>{{ disp.fecha }}</td>
+          <td>{{ disp.hora }}</td>
+          <td>
+            {% if disp.disponible %}
+              <span class="badge bg-success">Disponible</span>
+            {% else %}
+              <span class="badge bg-danger">No disponible</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if disp.disponible %}
+              <a href="{% url 'reservas:reservar' disp.id %}" class="btn btn-sm btn-primary">Reservar</a>
+            {% else %}
+              <button class="btn btn-sm btn-secondary" disabled>Ocupado</button>
+            {% endif %}
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="5" class="text-center">No hay horarios cargados por ahora.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
