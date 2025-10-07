@@ -34,6 +34,10 @@ INSTALLED_APPS = [
     'usuarios',
     'servicios',
     'reservas',
+
+    #librerias externas
+    'crispy_forms',
+    'crispy_bootstrap5',
 ]
 
 MIDDLEWARE = [
@@ -144,3 +148,7 @@ if 'RENDER' in os.environ:
         }
 
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+    # === Configuración de Crispy Forms ===
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
