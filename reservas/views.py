@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Disponibilidad, Cita, Servicio
-from usuarios.models import Barbero  # para relacionar barbero con usuario
+from reservas.models import Barbero 
 from django.utils import timezone
+from .forms import DisponibilidadForm 
 
 # ---------------------------
 # CLIENTE y BARBERO COMPARTEN
@@ -126,39 +127,52 @@ def dashboard_barbero(request):
 
     return render(request, "reservas/dashboard_barbero.html", contexto)
 
-# reservas/views.py
+
+# ---------------------------
+# DISPONIBILIDAD MÚLTIPLE
+# ---------------------------
 
 @login_required
 def gestionar_disponibilidad(request):
-    # Solo los barberos pueden acceder
+    """Permite al barbero crear varias horas para una misma fecha."""
     if not request.user.groups.filter(name="Barbero").exists():
         messages.error(request, "No tienes permiso para gestionar disponibilidades.")
         return redirect("reservas:mis_reservas")
 
-    barbero = request.user.barbero
-    disponibilidades = Disponibilidad.objects.filter(barbero=barbero).order_by("fecha", "hora")
+    barbero = Barbero.objects.get(usuario=request.user)
 
-    # Agregar nueva disponibilidad
-    if request.method == "POST":
-        fecha = request.POST.get("fecha")
-        hora = request.POST.get("hora")
-        if fecha and hora:
-            existe = Disponibilidad.objects.filter(barbero=barbero, fecha=fecha, hora=hora).exists()
-            if not existe:
-                Disponibilidad.objects.create(barbero=barbero, fecha=fecha, hora=hora)
-                messages.success(request, "Disponibilidad agregada correctamente.")
-                return redirect("reservas:gestionar_disponibilidad")
-            else:
-                messages.error(request, "Ya tienes un horario para esa fecha y hora.")
-        else:
-            messages.error(request, "Debes completar todos los campos.")
+    if request.method == 'POST':
+        form = DisponibilidadForm(request.POST)
+        if form.is_valid():
+            fecha = form.cleaned_data['fecha']
+            horas = form.cleaned_data['horas']
 
-    return render(request, "reservas/gestionar_disponibilidad.html", {"disponibilidades": disponibilidades})
+            creadas = 0
+            for h in horas:
+                obj, created = Disponibilidad.objects.get_or_create(
+                    barbero=barbero,
+                    fecha=fecha,
+                    hora=h,
+                    defaults={'disponible': True}
+                )
+                if created:
+                    creadas += 1
+
+            messages.success(request, f"{creadas} horas agregadas correctamente para {fecha}.")
+            return redirect('reservas:gestionar_disponibilidad')
+    else:
+        form = DisponibilidadForm()
+
+    disponibilidades = Disponibilidad.objects.filter(barbero=barbero).order_by('-fecha', 'hora')
+    return render(request, 'reservas/gestionar_disponibilidad.html', {
+        'form': form,
+        'disponibilidades': disponibilidades
+    })
 
 
 @login_required
 def eliminar_disponibilidad(request, disponibilidad_id):
-    # Solo los barberos pueden eliminar sus propias disponibilidades
+    """Permite al barbero eliminar sus propias disponibilidades."""
     disponibilidad = get_object_or_404(Disponibilidad, id=disponibilidad_id, barbero__usuario=request.user)
     disponibilidad.delete()
     messages.success(request, "Disponibilidad eliminada correctamente.")

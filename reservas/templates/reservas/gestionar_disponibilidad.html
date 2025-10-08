@@ -7,12 +7,12 @@
     {% csrf_token %}
     <div class="row">
       <div class="col-md-5">
-        <label for="fecha" class="form-label">Fecha:</label>
-        <input type="date" name="fecha" class="form-control" required>
+        <label for="id_fecha" class="form-label">Fecha:</label>
+        <input type="date" name="fecha" id="id_fecha" class="form-control" required>
       </div>
       <div class="col-md-5">
-        <label for="hora" class="form-label">Hora:</label>
-        <input type="time" name="hora" class="form-control" required>
+        <p class="mb-2">{{ form.horas.label }}</p>
+        {{ form.horas }}
       </div>
       <div class="col-md-2 d-flex align-items-end">
         <button type="submit" class="btn btn-primary w-100">Agregar</button>
@@ -58,4 +58,36 @@
     </div>
   </div>
 </div>
+
+<!-- JavaScript para mejorar la experiencia del calendario -->
+<script>
+  // Establecer fecha mínima como hoy
+  document.addEventListener('DOMContentLoaded', function() {
+    const fechaInput = document.getElementById('id_fecha');
+    const today = new Date().toISOString().split('T')[0];
+    fechaInput.min = today;
+    
+    // Opcional: agregar algún estilo adicional
+    fechaInput.addEventListener('focus', function() {
+      this.style.cursor = 'pointer';
+    });
+  });
+</script>
+
+<style>
+  /* Estilos opcionales para mejorar la apariencia del calendario */
+  input[type="date"] {
+    cursor: pointer;
+  }
+  
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 3px;
+  }
+  
+  input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    background-color: #e9ecef;
+  }
+</style>
 {% endblock %}
