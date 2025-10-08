@@ -1,0 +1,50 @@
+{% extends "base_barbero.html" %}
+{% block barbero_content %}
+<div class="container py-4">
+  <h3 class="mb-4">Reservas de Mis Clientes</h3>
+  <table class="table table-hover align-middle">
+    <thead class="table-dark">
+      <tr>
+        <th>Cliente</th>
+        <th>Servicio</th>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Estado</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for cita in citas %}
+        <tr>
+          <td>{{ cita.cliente.get_full_name|default:cita.cliente.username }}</td>
+          <td>{{ cita.servicio.nombre }}</td>
+          <td>{{ cita.disponibilidad.fecha }}</td>
+          <td>{{ cita.disponibilidad.hora }}</td>
+          <td>
+            {% if cita.estado == "pendiente" %}
+              <span class="badge bg-warning">Pendiente</span>
+            {% elif cita.estado == "confirmada" %}
+              <span class="badge bg-primary">Confirmada</span>
+            {% elif cita.estado == "completada" %}
+              <span class="badge bg-success">Completada</span>
+            {% else %}
+              <span class="badge bg-secondary">{{ cita.estado }}</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if cita.estado == "pendiente" %}
+              <a href="{% url 'reservas:confirmar' cita.id %}" class="btn btn-sm btn-success">Confirmar</a>
+            {% elif cita.estado == "confirmada" %}
+              <button class="btn btn-sm btn-secondary" disabled>Confirmada</button>
+            {% else %}
+              <button class="btn btn-sm btn-light" disabled>-</button>
+            {% endif %}
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="6" class="text-center">No tienes reservas aún.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

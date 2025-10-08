@@ -1,0 +1,61 @@
+{% extends "base_barbero.html" %}
+{% block barbero_content %}
+<div class="container mt-4">
+  <h3 class="fw-bold text-center mb-4">Gestionar Disponibilidades</h3>
+
+  <form method="POST" class="card p-3 shadow-sm mb-4">
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-md-5">
+        <label for="fecha" class="form-label">Fecha:</label>
+        <input type="date" name="fecha" class="form-control" required>
+      </div>
+      <div class="col-md-5">
+        <label for="hora" class="form-label">Hora:</label>
+        <input type="time" name="hora" class="form-control" required>
+      </div>
+      <div class="col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">Agregar</button>
+      </div>
+    </div>
+  </form>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h5 class="fw-bold mb-3">Tus horarios</h5>
+      {% if disponibilidades %}
+        <table class="table table-striped text-center align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th>Fecha</th>
+              <th>Hora</th>
+              <th>Estado</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for d in disponibilidades %}
+              <tr>
+                <td>{{ d.fecha }}</td>
+                <td>{{ d.hora }}</td>
+                <td>
+                  {% if d.disponible %}
+                    <span class="badge bg-success">Disponible</span>
+                  {% else %}
+                    <span class="badge bg-secondary">Ocupado</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <a href="{% url 'reservas:eliminar_disponibilidad' d.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p class="text-muted text-center">Aún no tienes horarios disponibles.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

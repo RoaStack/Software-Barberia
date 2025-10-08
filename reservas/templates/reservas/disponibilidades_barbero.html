@@ -1,0 +1,49 @@
+{% extends "base_barbero.html" %}
+{% block barbero_content %}
+<div class="container py-4">
+  <h3 class="mb-4">Mis Disponibilidades</h3>
+
+  <!-- Formulario para agregar nuevas disponibilidades -->
+  <form method="POST" class="mb-4">
+    {% csrf_token %}
+    <div class="row g-2">
+      <div class="col-md-5">
+        <input type="date" name="fecha" class="form-control" required>
+      </div>
+      <div class="col-md-5">
+        <input type="time" name="hora" class="form-control" required>
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-success w-100">Agregar</button>
+      </div>
+    </div>
+  </form>
+
+  <table class="table table-hover align-middle">
+    <thead class="table-dark">
+      <tr>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Disponible</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for disp in disponibilidades %}
+        <tr>
+          <td>{{ disp.fecha }}</td>
+          <td>{{ disp.hora }}</td>
+          <td>
+            {% if disp.disponible %}
+              <span class="badge bg-success">Sí</span>
+            {% else %}
+              <span class="badge bg-danger">No</span>
+            {% endif %}
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="3" class="text-center">No tienes horarios creados.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
