@@ -118,10 +118,15 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # 👇 CONFIGURACIÓN DE BASE DE DATOS PARA DESARROLLO LOCAL (AGREGAR ESTO)
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'barberia',
+        'USER': 'barber_user',
+        'PASSWORD': 'Barber123!',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
+
 
 # 👇 CONFIGURACIÓN PARA RENDER (al final del archivo)
 # Solo ejecutar esta configuración si estamos en Render

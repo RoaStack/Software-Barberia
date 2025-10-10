@@ -5,6 +5,7 @@ from .models import Disponibilidad, Cita, Servicio
 from reservas.models import Barbero 
 from django.utils import timezone
 from .forms import DisponibilidadForm 
+from django.db import transaction
 
 # ---------------------------
 # CLIENTE y BARBERO COMPARTEN
@@ -50,20 +51,35 @@ def disponibilidades(request):
 
 @login_required
 def reservar(request, disponibilidad_id):
-    """Permite a un cliente reservar una cita."""
-    disponibilidad = get_object_or_404(Disponibilidad, id=disponibilidad_id, disponible=True)
-    if request.method == "POST":
-        servicio_id = request.POST.get("servicio")
-        servicio = get_object_or_404(Servicio, id=servicio_id)
-        cita = Cita.objects.create(cliente=request.user, disponibilidad=disponibilidad, servicio=servicio)
-        disponibilidad.disponible = False
-        disponibilidad.save()
-        messages.success(request, "Tu cita fue reservada con éxito.")
-        return redirect("reservas:mis_reservas")
+    """Permite a un cliente reservar una cita de forma segura."""
+    with transaction.atomic():
+        # Bloquea la fila para evitar doble reserva simultánea
+        disponibilidad = Disponibilidad.objects.select_for_update().get(id=disponibilidad_id, disponible=True)
+        
+        if request.method == "POST":
+            servicio_id = request.POST.get("servicio")
+            servicio = get_object_or_404(Servicio, id=servicio_id)
 
-    servicios = Servicio.objects.all()
-    return render(request, "reservas/reservar.html", {"disponibilidad": disponibilidad, "servicios": servicios})
+            # Crear la cita con duración del servicio
+            cita = Cita.objects.create(
+                cliente=request.user,
+                disponibilidad=disponibilidad,
+                servicio=servicio,
+                duracion_servicio=servicio.duracion,
+            )
 
+            # Marcar disponibilidad como ocupada
+            disponibilidad.disponible = False
+            disponibilidad.save()
+
+            messages.success(request, "Tu cita fue reservada con éxito.")
+            return redirect("reservas:mis_reservas")
+
+        servicios = Servicio.objects.all()
+        return render(request, "reservas/reservar.html", {
+            "disponibilidad": disponibilidad,
+            "servicios": servicios
+        })
 
 @login_required
 def mis_reservas(request):

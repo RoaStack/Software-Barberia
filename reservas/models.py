@@ -25,7 +25,6 @@ class Disponibilidad(models.Model):
     def __str__(self):
         estado = "Disponible" if self.disponible else "No disponible"
         return f"{self.barbero} - {self.fecha} {self.hora.strftime('%H:%M')} ({estado})"
-
 class Cita(models.Model):
     ESTADOS = [
         ('pendiente', 'Pendiente'),
@@ -37,6 +36,7 @@ class Cita(models.Model):
     cliente = models.ForeignKey(User, on_delete=models.CASCADE, related_name="citas")
     disponibilidad = models.OneToOneField(Disponibilidad, on_delete=models.CASCADE, related_name="cita")
     servicio = models.ForeignKey(Servicio, on_delete=models.SET_NULL, null=True, blank=True)
+    duracion_servicio = models.PositiveIntegerField(default=30)  # 🔹 nuevo
     estado = models.CharField(max_length=20, choices=ESTADOS, default='pendiente')
     notas = models.TextField(blank=True)
     creado_en = models.DateTimeField(auto_now_add=True)
