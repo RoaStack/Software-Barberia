@@ -3,49 +3,49 @@
 
 {% block content %}
 <div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
+  <div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="col-md-7">
       <div class="card shadow border-0">
         <div class="card-header text-center" style="background-color:#1a1a1a; color:#d4af37;">
           <h4><i class="fas fa-user-plus me-2"></i> Crear Cuenta</h4>
         </div>
-        <div class="card-body">
-          <form method="post">
+        <div class="card-body p-4">
+          <form method="post" novalidate>
             {% csrf_token %}
             {{ form.non_field_errors }}
             <div class="row">
               <div class="col-md-6 mb-3">
-                <label class="form-label">Usuario</label>
+                <label class="form-label fw-semibold">Usuario</label>
                 {{ form.username }}
               </div>
               <div class="col-md-6 mb-3">
-                <label class="form-label">Correo</label>
+                <label class="form-label fw-semibold">Correo</label>
                 {{ form.email }}
               </div>
               <div class="col-md-6 mb-3">
-                <label class="form-label">Nombre</label>
+                <label class="form-label fw-semibold">Nombre</label>
                 {{ form.first_name }}
               </div>
               <div class="col-md-6 mb-3">
-                <label class="form-label">Apellido</label>
+                <label class="form-label fw-semibold">Apellido</label>
                 {{ form.last_name }}
               </div>
               <div class="col-md-6 mb-3">
-                <label class="form-label">Contraseña</label>
+                <label class="form-label fw-semibold">Contraseña</label>
                 {{ form.password }}
               </div>
               <div class="col-md-6 mb-3">
-                <label class="form-label">Confirmar Contraseña</label>
+                <label class="form-label fw-semibold">Confirmar Contraseña</label>
                 {{ form.password_confirm }}
               </div>
             </div>
-            <div class="d-grid">
-              <button type="submit" class="btn btn-primary">Registrarse</button>
+            <div class="d-grid mt-3">
+              <button type="submit" class="btn btn-primary py-2">Registrarse</button>
             </div>
           </form>
           <hr>
           <p class="text-center mb-0">¿Ya tienes cuenta?  
-            <a href="{% url 'usuarios:login' %}" class="text-decoration-none" style="color:#d4af37;">Inicia sesión</a>
+            <a href="{% url 'usuarios:login' %}" class="text-decoration-none fw-semibold" style="color:#d4af37;">Inicia sesión</a>
           </p>
         </div>
       </div>
@@ -53,3 +53,5 @@
   </div>
 </div>
 {% endblock %}
+
+
