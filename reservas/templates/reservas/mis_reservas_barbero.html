@@ -33,7 +33,7 @@
           </td>
           <td>
             {% if cita.estado == "pendiente" %}
-              <a href="{% url 'reservas:confirmar' cita.id %}" class="btn btn-sm btn-success">Confirmar</a>
+              <a href="{% url 'reservas:confirmar_reserva' cita.id %}" class="btn btn-sm btn-success">Confirmar</a>
             {% elif cita.estado == "confirmada" %}
               <button class="btn btn-sm btn-secondary" disabled>Confirmada</button>
             {% else %}
