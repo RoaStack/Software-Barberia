@@ -10,12 +10,8 @@
   <div class="container">
     <h1 class="display-3 fw-bold mb-4">Bienvenido a la Barbería Don RinoSan</h1>
     <p class="lead mb-4">Tu estilo es nuestra prioridad. Descubre nuestros servicios premium.</p>
-    <a href="{% url 'servicios:lista' %}" class="btn btn-warning btn-lg me-2">Ver Servicios</a>
-    {% if user.is_authenticated %}
-      <a href="{% url 'reservas:disponibilidades' %}" class="btn btn-outline-light btn-lg">Reservar Ahora</a>
-    {% else %}
-      <a href="{% url 'usuarios:login' %}" class="btn btn-outline-light btn-lg">Reservar Ahora</a>
-    {% endif %}
+    <a href="#servicios" class="btn btn-warning btn-lg me-2">Ver Servicios</a>
+      <a href="#boton" class="btn btn-outline-light btn-lg">Reservar Ahora</a>
   </div>
 </section>
 
@@ -27,7 +23,7 @@
       <p class="lead text-muted">Explora nuestros servicios antes de registrarte o iniciar sesión</p>
     </div>
 
-    <div class="row">
+    <div class="row" id="servicios">
       {% for servicio in servicios %}
         <div class="col-md-4 mb-4">
           <div class="card service-card h-100 shadow-sm border-0">
@@ -52,7 +48,7 @@
       {% endfor %}
     </div>
 
-    <div class="text-center mt-5">
+    <div class="text-center mt-5" id="boton">
       {% if not user.is_authenticated %}
         <a href="{% url 'usuarios:login' %}" class="btn btn-primary btn-lg me-3">Iniciar Sesión</a>
         <a href="{% url 'usuarios:registro' %}" class="btn btn-outline-primary btn-lg">Registrarse</a>
