@@ -4,22 +4,71 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Barbería Elite{% endblock %}</title>
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
-    body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    .navbar { background-color: #1a1a1a; }
-    .btn-primary { background-color: #d4af37; border-color: #d4af37; }
-    .btn-primary:hover { background-color: #b8941f; border-color: #b8941f; }
-    footer { background-color: #1a1a1a; color: white; padding: 20px; text-align: center; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      background-color: #f8f9fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .navbar {
+      background-color: #1a1a1a;
+    }
+
+    .btn-primary {
+      background-color: #d4af37;
+      border-color: #d4af37;
+    }
+
+    .btn-primary:hover {
+      background-color: #b8941f;
+      border-color: #b8941f;
+    }
+
+    .form-control, select, textarea {
+      border-radius: 0.5rem;
+      border: 1px solid #ccc;
+      padding: 0.6rem 0.8rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-control:focus {
+      border-color: #d4af37;
+      box-shadow: 0 0 4px rgba(212,175,55,0.5);
+    }
+
+    footer {
+      background-color: #1a1a1a;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      margin-top: auto;
+    }
   </style>
+
   {% block extra_css %}{% endblock %}
 </head>
 <body>
   {% include "partials/navbar.html" %}
   {% include "partials/messages.html" %}
 
-  {% block content %}{% endblock %}
+  <main>
+    {% block content %}{% endblock %}
+  </main>
 
   <footer>
     <p class="mb-0">© 2025 Barbería Elite. Todos los derechos reservados.</p>
@@ -29,3 +78,4 @@
   {% block extra_js %}{% endblock %}
 </body>
 </html>
+

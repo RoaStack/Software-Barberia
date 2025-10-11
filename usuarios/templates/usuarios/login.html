@@ -3,30 +3,30 @@
 
 {% block content %}
 <div class="container py-5">
-  <div class="row justify-content-center">
+  <div class="row justify-content-center align-items-center" style="min-height: 70vh;">
     <div class="col-md-5">
       <div class="card shadow border-0">
         <div class="card-header text-center" style="background-color:#1a1a1a; color:#d4af37;">
           <h4><i class="fas fa-user me-2"></i> Iniciar Sesión</h4>
         </div>
-        <div class="card-body">
-          <form method="post">
+        <div class="card-body p-4">
+          <form method="post" novalidate>
             {% csrf_token %}
             <div class="mb-3">
-              <label for="username" class="form-label">Usuario</label>
-              <input type="text" name="username" class="form-control" id="username" required>
+              <label for="username" class="form-label fw-semibold">Usuario</label>
+              <input type="text" name="username" class="form-control" id="username" placeholder="Ingresa tu usuario" required>
             </div>
             <div class="mb-3">
-              <label for="password" class="form-label">Contraseña</label>
-              <input type="password" name="password" class="form-control" id="password" required>
+              <label for="password" class="form-label fw-semibold">Contraseña</label>
+              <input type="password" name="password" class="form-control" id="password" placeholder="••••••••" required>
             </div>
-            <div class="d-grid">
-              <button type="submit" class="btn btn-primary">Ingresar</button>
+            <div class="d-grid mt-4">
+              <button type="submit" class="btn btn-primary py-2">Ingresar</button>
             </div>
           </form>
           <hr>
           <p class="text-center mb-0">¿No tienes cuenta?  
-            <a href="{% url 'usuarios:registro' %}" class="text-decoration-none" style="color:#d4af37;">Regístrate aquí</a>
+            <a href="{% url 'usuarios:registro' %}" class="text-decoration-none fw-semibold" style="color:#d4af37;">Regístrate aquí</a>
           </p>
         </div>
       </div>
@@ -34,3 +34,5 @@
   </div>
 </div>
 {% endblock %}
+
+

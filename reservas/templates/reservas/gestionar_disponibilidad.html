@@ -1,0 +1,93 @@
+{% extends "base_barbero.html" %}
+{% block barbero_content %}
+<div class="container mt-4">
+  <h3 class="fw-bold text-center mb-4">Gestionar Disponibilidades</h3>
+
+  <form method="POST" class="card p-3 shadow-sm mb-4">
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-md-5">
+        <label for="id_fecha" class="form-label">Fecha:</label>
+        <input type="date" name="fecha" id="id_fecha" class="form-control" required>
+      </div>
+      <div class="col-md-5">
+        <p class="mb-2">{{ form.horas.label }}</p>
+        {{ form.horas }}
+      </div>
+      <div class="col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">Agregar</button>
+      </div>
+    </div>
+  </form>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h5 class="fw-bold mb-3">Tus horarios</h5>
+      {% if disponibilidades %}
+        <table class="table table-striped text-center align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th>Fecha</th>
+              <th>Hora</th>
+              <th>Estado</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for d in disponibilidades %}
+              <tr>
+                <td>{{ d.fecha }}</td>
+                <td>{{ d.hora }}</td>
+                <td>
+                  {% if d.disponible %}
+                    <span class="badge bg-success">Disponible</span>
+                  {% else %}
+                    <span class="badge bg-secondary">Ocupado</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <a href="{% url 'reservas:eliminar_disponibilidad' d.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p class="text-muted text-center">Aún no tienes horarios disponibles.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript para mejorar la experiencia del calendario -->
+<script>
+  // Establecer fecha mínima como hoy
+  document.addEventListener('DOMContentLoaded', function() {
+    const fechaInput = document.getElementById('id_fecha');
+    const today = new Date().toISOString().split('T')[0];
+    fechaInput.min = today;
+    
+    // Opcional: agregar algún estilo adicional
+    fechaInput.addEventListener('focus', function() {
+      this.style.cursor = 'pointer';
+    });
+  });
+</script>
+
+<style>
+  /* Estilos opcionales para mejorar la apariencia del calendario */
+  input[type="date"] {
+    cursor: pointer;
+  }
+  
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 3px;
+  }
+  
+  input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    background-color: #e9ecef;
+  }
+</style>
+{% endblock %}

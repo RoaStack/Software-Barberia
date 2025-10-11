@@ -12,7 +12,6 @@
         <th>Barbero</th>
         <th>Servicio</th>
         <th>Estado</th>
-        <th>Acciones</th>
       </tr>
     </thead>
     <tbody>
@@ -21,7 +20,7 @@
           <td>{{ cita.disponibilidad.fecha }}</td>
           <td>{{ cita.disponibilidad.hora }}</td>
           <td>{{ cita.disponibilidad.barbero.usuario.get_full_name|default:cita.disponibilidad.barbero.usuario.username }}</td>
-          <td>{{ cita.servicio.nombre if cita.servicio else "-" }}</td>
+          <td>{{ cita.servicio.nombre}}</td>
           <td>
             {% if cita.estado == "pendiente" %}
               <span class="badge bg-warning text-dark">Pendiente</span>
@@ -31,15 +30,6 @@
               <span class="badge bg-success">Completada</span>
             {% else %}
               <span class="badge bg-danger">Cancelada</span>
-            {% endif %}
-          </td>
-          <td>
-            {% if user.groups.filter(name="Cliente").exists and cita.estado == "pendiente" %}
-              <a href="{% url 'reservas:cancelar' cita.id %}" class="btn btn-sm btn-outline-danger">Cancelar</a>
-            {% endif %}
-
-            {% if user.groups.filter(name="Barbero").exists and cita.estado == "pendiente" %}
-              <a href="{% url 'reservas:confirmar' cita.id %}" class="btn btn-sm btn-outline-primary">Confirmar</a>
             {% endif %}
           </td>
         </tr>

@@ -1,0 +1,127 @@
+{% extends "base_barbero.html" %}
+{% block barbero_content %}
+<div class="container py-4">
+
+  <!-- Encabezado -->
+  <div class="card shadow border-0 mb-4">
+    <div class="card-body text-center">
+      <h3 class="fw-bold mb-2">Panel del Barbero</h3>
+      <p class="text-muted">
+        Administra tus horarios, controla las reservas de tus clientes y revisa tus próximas citas.
+      </p>
+    </div>
+  </div>
+
+  <!-- 🔹 Métricas rápidas -->
+  <div class="row text-center mb-4">
+    <div class="col-md-3 mb-3">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h5 class="fw-bold text-primary">{{ total_citas }}</h5>
+          <p class="text-muted mb-0">Total de Citas</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 mb-3">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h5 class="fw-bold text-warning">{{ pendientes }}</h5>
+          <p class="text-muted mb-0">Pendientes</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 mb-3">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h5 class="fw-bold text-success">{{ confirmadas }}</h5>
+          <p class="text-muted mb-0">Confirmadas</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 mb-3">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h5 class="fw-bold text-secondary">{{ completadas }}</h5>
+          <p class="text-muted mb-0">Completadas</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔹 Accesos principales -->
+  <div class="row mb-5">
+    <!-- Gestión de disponibilidad -->
+    <div class="col-md-6 mb-4">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body text-center">
+          <i class="fas fa-clock fa-3x mb-3" style="color:#d4af37;"></i>
+          <h5 class="fw-bold">Disponibilidad</h5>
+          <p class="text-muted">Agrega y administra los horarios en los que estarás disponible.</p>
+          <a href="{% url 'reservas:gestionar_disponibilidad' %}" class="btn btn-primary">Gestionar</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reservas -->
+    <div class="col-md-6 mb-4">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body text-center">
+          <i class="fas fa-calendar-day fa-3x mb-3" style="color:#d4af37;"></i>
+          <h5 class="fw-bold">Reservas de Clientes</h5>
+          <p class="text-muted">Revisa las reservas que han hecho tus clientes y confirma su asistencia.</p>
+          <a href="{% url 'reservas:mis_reservas' %}" class="btn btn-primary">Ver Reservas</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔹 Tabla de próximas citas -->
+  <div class="card shadow border-0">
+    <div class="card-header bg-dark text-white">
+      <h5 class="mb-0">Próximas Citas</h5>
+    </div>
+    <div class="card-body p-0">
+      <table class="table table-hover mb-0 align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Cliente</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Servicio</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for cita in citas|slice:":5" %}
+            <tr>
+              <td>{{ cita.cliente.get_full_name|default:cita.cliente.username }}</td>
+              <td>{{ cita.disponibilidad.fecha }}</td>
+              <td>{{ cita.disponibilidad.hora }}</td>
+              <td>{{ cita.servicio.nombre }}</td>
+              <td>
+                {% if cita.estado == "pendiente" %}
+                  <span class="badge bg-warning text-dark">Pendiente</span>
+                {% elif cita.estado == "confirmada" %}
+                  <span class="badge bg-success">Confirmada</span>
+                {% elif cita.estado == "completada" %}
+                  <span class="badge bg-secondary">Completada</span>
+                {% elif cita.estado == "cancelada" %}
+                  <span class="badge bg-danger">Cancelada</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="5" class="text-center text-muted py-3">No tienes citas próximas.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="card-footer text-end">
+      <a href="{% url 'reservas:mis_reservas' %}" class="btn btn-outline-primary btn-sm">Ver todas</a>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
