@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
-
+load_dotenv(os.path.join(BASE_DIR, ".env"))
 # 👇 SECRET_KEY SEGURA - usa variable de entorno
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-clave-temporal-cambiar-mas-tarde-12345')
 
