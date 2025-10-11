@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background-color: #f8f8f8; padding: 0; margin: 0; }
+    .container { max-width: 600px; margin: 20px auto; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+    .header { background-color: #000; color: #c5a446; text-align: center; padding: 20px; font-size: 22px; font-weight: bold; }
+    .content { padding: 25px; color: #333; }
+    h2 { color: #198754; margin-top: 0; }
+    ul { line-height: 1.8; }
+    .footer { background-color: #000; color: #c5a446; text-align: center; font-size: 13px; padding: 10px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      Barbería Don RinoSan 💈
+    </div>
+    <div class="content">
+      <h2>Tu cita ha sido confirmada</h2>
+      <p>Hola <strong>{{ cita.cliente.first_name }}</strong>, tu cita fue confirmada por el barbero.</p>
+      <ul>
+        <li><b>Fecha:</b> {{ cita.disponibilidad.fecha }}</li>
+        <li><b>Hora:</b> {{ cita.disponibilidad.hora }}</li>
+        <li><b>Servicio:</b> {{ cita.servicio.nombre }}</li>
+        <li><b>Barbero:</b> {{ cita.disponibilidad.barbero.usuario.username }}</li>
+      </ul>
+      <p>¡Te esperamos puntual para darte la mejor experiencia en Barbería Don RinoSan!</p>
+    </div>
+    <div class="footer">
+      © 2025 Barbería Don RinoSan — Donde el estilo es un arte.
+    </div>
+  </div>
+</body>
+</html>
