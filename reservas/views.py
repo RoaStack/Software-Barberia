@@ -6,6 +6,8 @@ from reservas.models import Barbero
 from django.utils import timezone
 from .forms import DisponibilidadForm 
 from django.db import transaction
+from .emails import enviar_correo_reserva, enviar_correo_confirmacion, enviar_correo_cancelacion
+
 
 # ---------------------------
 # CLIENTE y BARBERO COMPARTEN
@@ -53,7 +55,6 @@ def disponibilidades(request):
 def reservar(request, disponibilidad_id):
     """Permite a un cliente reservar una cita de forma segura."""
     with transaction.atomic():
-        # Bloquea la fila para evitar doble reserva simultánea
         disponibilidad = Disponibilidad.objects.select_for_update().get(id=disponibilidad_id, disponible=True)
         
         if request.method == "POST":
@@ -72,6 +73,9 @@ def reservar(request, disponibilidad_id):
             disponibilidad.disponible = False
             disponibilidad.save()
 
+            # ✉️ Enviar correo de reserva (HTML) - CORREGIDO
+            enviar_correo_reserva(cita)
+
             messages.success(request, "Tu cita fue reservada con éxito.")
             return redirect("reservas:mis_reservas")
 
@@ -81,13 +85,10 @@ def reservar(request, disponibilidad_id):
             "servicios": servicios
         })
 
+
 @login_required
 def mis_reservas(request):
-    """
-    Muestra las reservas:
-    - Cliente: sus propias citas
-    - Barbero: citas de sus clientes
-    """
+    """Muestra las reservas del cliente o barbero."""
     if request.user.groups.filter(name="Barbero").exists():
         citas = Cita.objects.filter(disponibilidad__barbero__usuario=request.user).order_by("disponibilidad__fecha", "disponibilidad__hora")
         return render(request, "reservas/mis_reservas_barbero.html", {"citas": citas})
@@ -104,6 +105,10 @@ def cancelar_reserva(request, cita_id):
     cita.disponibilidad.disponible = True
     cita.disponibilidad.save()
     cita.save()
+
+    # ✉️ Enviar correo de cancelación (HTML) - CORREGIDO
+    enviar_correo_cancelacion(cita)
+
     messages.success(request, "La reserva fue cancelada.")
     return redirect("reservas:mis_reservas")
 
@@ -114,6 +119,10 @@ def confirmar_reserva(request, cita_id):
     cita = get_object_or_404(Cita, id=cita_id, disponibilidad__barbero__usuario=request.user, estado="pendiente")
     cita.estado = "confirmada"
     cita.save()
+
+    # ✉️ Enviar correo de confirmación (HTML) - CORREGIDO
+    enviar_correo_confirmacion(cita)
+
     messages.success(request, "La reserva fue confirmada.")
     return redirect("reservas:mis_reservas")
 
