@@ -7,6 +7,7 @@ from django.utils import timezone
 from .forms import DisponibilidadForm 
 from django.db import transaction
 from .emails import enviar_correo_reserva, enviar_correo_confirmacion, enviar_correo_cancelacion
+from datetime import date
 
 
 # ---------------------------
@@ -202,3 +203,26 @@ def eliminar_disponibilidad(request, disponibilidad_id):
     disponibilidad.delete()
     messages.success(request, "Disponibilidad eliminada correctamente.")
     return redirect("reservas:gestionar_disponibilidad")
+
+@login_required
+def lista_barberos(request):
+    barberos = Barbero.objects.all()
+    return render(request, "reservas/lista_barberos.html", {"barberos": barberos})
+
+@login_required
+def horarios_barbero(request, barbero_id):
+    barbero = get_object_or_404(Barbero, id=barbero_id)
+    fecha_seleccionada = request.GET.get("fecha", date.today())
+
+    horarios_disponibles = Disponibilidad.objects.filter(
+        barbero=barbero,
+        fecha=fecha_seleccionada,
+        disponible=True
+    ).order_by("hora")
+
+    context = {
+        "barbero": barbero,
+        "fecha": fecha_seleccionada,
+        "horarios_disponibles": horarios_disponibles,
+    }
+    return render(request, "reservas/horarios_disponibles.html", context)

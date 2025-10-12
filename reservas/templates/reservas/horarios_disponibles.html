@@ -1,0 +1,39 @@
+{% extends 'base_cliente.html' %}
+{% block cliente_content %}
+<div class="container py-4">
+  <h3 class="text-center mb-4">
+    Horarios disponibles - {{ barbero.usuario.get_full_name|default:barbero.usuario.username }}
+  </h3>
+
+  <form method="get" class="mb-4 text-center">
+    <label for="fecha" class="form-label fw-bold">Seleccionar fecha:</label>
+    <input type="date" name="fecha" id="fecha" value="{{ fecha|date:'Y-m-d' }}" 
+           class="form-control d-inline-block w-auto mx-2" onchange="this.form.submit()">
+  </form>
+
+  {% if not horarios_disponibles %}
+    <div class="alert alert-info text-center">
+      <i class="fas fa-clock fa-2x mb-2"></i>
+      <h5>No hay horarios disponibles</h5>
+      <p>Para el {{ fecha|date:"l, d F Y" }} no se encontraron horarios.</p>
+    </div>
+  {% else %}
+    <div class="row">
+      {% for horario in horarios_disponibles %}
+        <div class="col-md-3 mb-3">
+          <a href="{% url 'reservas:reservar' horario.id %}" 
+             class="btn btn-outline-primary w-100 py-3 shadow-sm">
+            <strong>{{ horario.hora|time:"H:i" }}</strong>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="text-center mt-4">
+    <a href="{% url 'reservas:lista_barberos' %}" class="btn btn-secondary">
+      ← Volver a Barberos
+    </a>
+  </div>
+</div>
+{% endblock %}
