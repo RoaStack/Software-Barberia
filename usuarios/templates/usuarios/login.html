@@ -10,6 +10,17 @@
           <h4><i class="fas fa-user me-2"></i> Iniciar Sesión</h4>
         </div>
         <div class="card-body p-4">
+
+          <!-- ✅ Mostrar errores de credenciales -->
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              {% for error in form.non_field_errors %}
+                {{ error }}
+              {% endfor %}
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+          {% endif %}
+
           <form method="post" novalidate>
             {% csrf_token %}
             <div class="mb-3">
@@ -24,6 +35,7 @@
               <button type="submit" class="btn btn-primary py-2">Ingresar</button>
             </div>
           </form>
+
           <hr>
           <p class="text-center mb-0">¿No tienes cuenta?  
             <a href="{% url 'usuarios:registro' %}" class="text-decoration-none fw-semibold" style="color:#d4af37;">Regístrate aquí</a>
@@ -34,5 +46,6 @@
   </div>
 </div>
 {% endblock %}
+
 
 
