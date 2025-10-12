@@ -168,32 +168,3 @@ if 'RENDER' in os.environ:
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tu_proyecto.settings')
-django.setup()
-
-from django.contrib.auth import get_user_model
-
-def create_superuser():
-    User = get_user_model()
-    
-    # Obtener credenciales de variables de entorno
-    username = os.environ.get('SUPERUSER_USERNAME', 'admin')
-    email = os.environ.get('SUPERUSER_EMAIL', 'admin@example.com')
-    password = os.environ.get('SUPERUSER_PASSWORD')
-    
-    if not password:
-        print("No se proporcionó contraseña para el superusuario")
-        return
-    
-    if not User.objects.filter(username=username).exists():
-        User.objects.create_superuser(
-            username=username,
-            email=email,
-            password=password
-        )
-        print(f"Superusuario {username} creado exitosamente")
-    else:
-        print(f"El superusuario {username} ya existe")
-
-if __name__ == '__main__':
-    create_superuser()
