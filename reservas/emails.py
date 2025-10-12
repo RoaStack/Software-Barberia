@@ -18,7 +18,7 @@ def enviar_correo_html(asunto, template, contexto, destinatarios):
 # -----------------------------
 
 def enviar_correo_reserva(cita):
-    asunto = "💈 Nueva reserva confirmada"
+    asunto = "💈 Nueva reserva generada"
     contexto = {"cita": cita}
     destinatarios = [cita.cliente.email, cita.disponibilidad.barbero.usuario.email]
     enviar_correo_html(asunto, "emails/reserva_creada.html", contexto, destinatarios)
