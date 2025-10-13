@@ -16,8 +16,9 @@
               </div>
             {% endif %}
             <div class="card-body text-center">
-              <h5 class="card-title">{{ barbero.usuario.get_full_name|default:barbero.usuario.username }}</h5>
+              <h5 class="card-title">{{ barbero.usuario.get_full_name|default:barbero.usuario.first_name }}</h5>
               <p class="text-muted">{{ barbero.especialidad|default:"Barbero profesional" }}</p>
+              <p class="text-muted">{{ barbero.descripcion|default:"Barbero profesional" }}</p>
               <a href="{% url 'reservas:horarios_barbero' barbero.id %}" class="btn btn-primary mt-2 w-100">
                 Ver Horarios Disponibles
               </a>
