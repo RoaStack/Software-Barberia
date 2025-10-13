@@ -2,6 +2,31 @@
 {% block title %}Servicios - Barbería Elite{% endblock %}
 
 {% block content %}
+<!-- Importar fuente Poppins desde Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<!-- Estilos personalizados -->
+<style>
+  .price-tag {
+    color: #d4af37;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-top: 8px;
+  }
+
+  /* 🔸 Animación al pasar el mouse sobre las tarjetas */
+  .service-card {
+    transition: all 0.3s ease;
+    border-radius: 12px;
+  }
+
+  .service-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
+  }
+</style>
+
 <div class="container py-5">
   <div class="text-center mb-5">
     <h2 class="fw-bold">Nuestros Servicios</h2>

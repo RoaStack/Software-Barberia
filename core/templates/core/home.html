@@ -1,26 +1,260 @@
 {% extends "base.html" %}
-{% block title %}Barbería Elite - Inicio{% endblock %}
+{% load static %}
+{% block title %}Barbería Don RinoSan - Inicio{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="hero-section text-white text-center d-flex align-items-center" 
-         style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
-                url('https://images.unsplash.com/photo-1585747861815-0468f061d1ec?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80') center/cover no-repeat; 
-                height: 80vh;">
-  <div class="container">
-    <h1 class="display-3 fw-bold mb-4">Bienvenido a la Barbería Don RinoSan</h1>
-    <p class="lead mb-4">Tu estilo es nuestra prioridad. Descubre nuestros servicios premium.</p>
-    <a href="#servicios" class="btn btn-warning btn-lg me-2">Ver Servicios</a>
-      <a href="#boton" class="btn btn-outline-light btn-lg">Reservar Ahora</a>
+<!-- Importar fuente Poppins desde Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<!-- Importar Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+<!-- Estilos personalizados -->
+<style>
+  .price-tag {
+    color: #d4af37;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-top: 8px;
+  }
+
+  /* 🔸 Animación al pasar el mouse sobre las tarjetas */
+  .service-card {
+    transition: all 0.3s ease;
+    border-radius: 12px;
+  }
+
+  .service-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
+  }
+  
+  /* Estilos para la sección de servicios mejorada */
+  .services-section {
+    background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), 
+                url('https://images.unsplash.com/photo-1585747861815-0468f061d1ec?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80') center/cover no-repeat;
+    padding: 80px 0;
+    position: relative;
+  }
+  
+  .services-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="%23d4af37" stroke-width="0.5" opacity="0.1"/></svg>');
+    z-index: 0;
+  }
+  
+  .services-section .container {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .service-icon-container {
+    background-color: rgba(212, 175, 55, 0.1);
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    border: 2px solid rgba(212, 175, 55, 0.3);
+  }
+  
+  .service-icon {
+    color: #d4af37;
+    font-size: 2rem;
+  }
+  
+  .section-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+    position: relative;
+    display: inline-block;
+  }
+  
+  .section-title::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background-color: #d4af37;
+  }
+  
+  .section-subtitle {
+    font-family: 'Poppins', sans-serif;
+    color: #666;
+    margin-bottom: 50px;
+  }
+  
+  /* Estilos para la imagen fija */
+  .hero-image {
+    position: relative;
+    height: 70vh;
+    overflow: hidden;
+  }
+
+  .hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+  }
+
+  .hero-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+  }
+
+  .hero-subtitle {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #d4af37;
+  }
+
+  .hero-description {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    max-width: 600px;
+  }
+
+  .hero-buttons .btn {
+    margin: 0 10px;
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+  }
+  
+  .logo-section {
+    background-color: #1a1a1a;
+    padding: 20px 0;
+    text-align: center;
+    border-bottom: 3px solid #d4af37;
+  }
+  
+  .logo-text {
+    font-family: 'Poppins', sans-serif;
+    color: #d4af37;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin: 0;
+  }
+  
+  .logo-subtitle {
+    font-family: 'Poppins', sans-serif;
+    color: #fff;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    margin: 0;
+  }
+</style>
+
+<!-- Logo Section -->
+<div class="logo-section">
+  <div class="container d-flex justify-content-center align-items-center">
+    <img src="{% static 'img/logoBarberia.png' %}" alt="Logo Barbería Don Rinosan" class="logo-img">
   </div>
-</section>
+</div>
+
+<style>
+  .logo-section {
+    background-color: #131212;
+    padding: 15px 0;
+    border-bottom: 3px solid #d4af37;
+  }
+
+  .logo-img {
+    width: 140px; /* 🔹 Ajusta el tamaño según cómo se vea */
+    height: 140px;
+    border-radius: 50%; /* 🔹 Mantiene la forma circular */
+    object-fit: cover; /* 🔹 Asegura que no se deforme */
+    border: 3px solid #d4af37; /* 🔹 Opcional, combina con los colores de la web */
+  }
+
+  @media (max-width: 768px) {
+    .logo-img {
+      width: 90px;
+      height: 90px;
+    }
+    
+    .hero-image {
+      height: 60vh;
+    }
+    
+    .hero-title {
+      font-size: 2rem;
+    }
+    
+    .hero-subtitle {
+      font-size: 1.4rem;
+    }
+    
+    .hero-description {
+      font-size: 1rem;
+    }
+    
+    .hero-buttons .btn {
+      margin: 5px;
+      padding: 10px 20px;
+      font-size: 1rem;
+    }
+  }
+</style>
+
+<!-- Imagen Fija con toda la información -->
+<div class="hero-image">
+  <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80"
+       alt="Ambiente Exclusivo Barbería Don RinoSan">
+  <div class="hero-content">
+    <h1 class="hero-title">Barbería DonRinoSan</h1>
+    <h2 class="hero-subtitle">Bienvenido a la Barbería Don RinoSan</h2>
+    <p class="hero-description">Tu estilo es nuestra prioridad. Descubre nuestros servicios premium.</p>
+    <div class="hero-buttons">
+      <a href="#servicios" class="btn btn-warning btn-lg">Ver Servicios</a>
+      <a href="#boton" class="btn btn-outline-light btn-lg">Reservar Ahora</a>
+    </div>
+    <div class="mt-4 pt-4 border-top border-gold" style="border-color: #d4af37 !important;">
+      <h3 class="hero-subtitle">Ambiente Exclusivo</h3>
+      <p class="hero-description">Relájate en nuestro espacio diseñado para tu comodidad.</p>
+    </div>
+  </div>
+</div>
 
 <!-- Services Section -->
-<section id="services" class="py-5">
+<section id="services" class="services-section">
   <div class="container">
     <div class="text-center mb-5">
-      <h2 class="fw-bold">Nuestros Servicios</h2>
-      <p class="lead text-muted">Explora nuestros servicios antes de registrarte o iniciar sesión</p>
+      <h2 class="section-title">Nuestros Servicios</h2>
+      <p class="section-subtitle">Explora nuestros servicios antes de registrarte o iniciar sesión</p>
     </div>
 
     <div class="row" id="servicios">
@@ -28,8 +262,8 @@
         <div class="col-md-4 mb-4">
           <div class="card service-card h-100 shadow-sm border-0">
             <div class="card-body text-center p-4">
-              <div class="service-icon mb-3">
-                <i class="fas fa-cut fa-2x" style="color:#d4af37;"></i>
+              <div class="service-icon-container">
+                <i class="fas fa-cut service-icon"></i>
               </div>
               <h5 class="card-title fw-bold">{{ servicio.nombre }}</h5>
               <p class="card-text text-muted">{{ servicio.descripcion }}</p>
@@ -49,11 +283,12 @@
     </div>
 
     <div class="text-center mt-5" id="boton">
-      {% if not user.is_authenticated %}
-        <a href="{% url 'usuarios:login' %}" class="btn btn-primary btn-lg me-3">Iniciar Sesión</a>
-        <a href="{% url 'usuarios:registro' %}" class="btn btn-outline-primary btn-lg">Registrarse</a>
-      {% endif %}
+  {% if not user.is_authenticated %}
+    <a href="{% url 'usuarios:login' %}" class="btn btn-primary btn-lg me-3">Iniciar Sesión</a>
+    <a href="{% url 'usuarios:registro' %}" class="btn btn-lg" style="background-color: #ffffff; color: #000000; border: 2px solid #d4af37;">Registrarse</a>
+  {% endif %}
     </div>
   </div>
 </section>
+
 {% endblock %}

@@ -1,7 +1,10 @@
+{% load static %}  <!-- 🔥 AGREGAR ESTA LÍNEA AL INICIO -->
+
 <nav class="navbar navbar-expand-lg navbar-dark">
   <div class="container">
     <a class="navbar-brand" href="{% url 'core:home' %}">
-      <i class="fas fa-cut me-2"></i>Barbería Elite
+      <img src="{% static 'img/logoBarberia.png' %}" alt="Logo Barbería Don RinoSan" class="navbar-logo me-2">
+      Barbería DonRinoSan
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
@@ -37,3 +40,21 @@
     </div>
   </div>
 </nav>
+
+<style>
+.navbar-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #d4af37;
+}
+
+/* Para que se vea bien en móviles */
+@media (max-width: 768px) {
+  .navbar-logo {
+    width: 35px;
+    height: 35px;
+  }
+}
+</style>
