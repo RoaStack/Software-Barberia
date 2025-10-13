@@ -1,17 +1,28 @@
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.conf import settings
+import logging
+
+logger = logging.getLogger(__name__)
 
 def enviar_correo_html(asunto, template, contexto, destinatarios):
     """Función genérica para enviar correos HTML."""
     html_content = render_to_string(template, contexto)
-    text_content = (
-        f"{asunto}\n\nPor favor, visualiza este correo en formato HTML para ver los detalles correctamente."
-    )
+    text_content = f"{asunto}\n\nPor favor, visualiza este correo en formato HTML."
 
-    email = EmailMultiAlternatives(asunto, text_content, settings.DEFAULT_FROM_EMAIL, destinatarios)
-    email.attach_alternative(html_content, "text/html")
-    email.send()
+    try:
+        msg = EmailMultiAlternatives(
+            subject=asunto,
+            body=text_content,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=destinatarios
+        )
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
+    except Exception as e:
+        logger.error(f"❌ Error al enviar correo: {e}")
+        # También puedes imprimir para ver en logs de Render
+        print(f"❌ Error al enviar correo: {e}")
 
 # -----------------------------
 # CORREOS ESPECÍFICOS

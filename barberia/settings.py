@@ -16,7 +16,7 @@ load_dotenv(BASE_DIR / ".env")
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-temporal')
 DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['software_barberia.onrender.com','localhost', '127.0.0.1',]
 
 # ------------------- APLICACIONES -------------------
 INSTALLED_APPS = [
