@@ -30,7 +30,7 @@ class Barbero(models.Model):
         """Devuelve la URL de la foto o una por defecto"""
         if self.foto and hasattr(self.foto, 'url'):
             return self.foto.url
-        return '/static/images/barbero-default.png'  # Crea esta imagen en tu static
+        return '/static/images/logoBarberia.png'  # Crea esta imagen en tu static
 
 class Disponibilidad(models.Model):
     barbero = models.ForeignKey(Barbero, on_delete=models.CASCADE, related_name="disponibilidades")
