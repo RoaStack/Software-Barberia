@@ -209,14 +209,24 @@ def lista_barberos(request):
     barberos = Barbero.objects.all()
     return render(request, "reservas/lista_barberos.html", {"barberos": barberos})
 
+
 @login_required
 def horarios_barbero(request, barbero_id):
     barbero = get_object_or_404(Barbero, id=barbero_id)
-    fecha_seleccionada = request.GET.get("fecha", date.today())
+    
+    # Obtener y convertir la fecha
+    fecha_str = request.GET.get("fecha")
+    if fecha_str:
+        try:
+            fecha_seleccionada = date.fromisoformat(fecha_str)
+        except (ValueError, TypeError):
+            fecha_seleccionada = date.today()
+    else:
+        fecha_seleccionada = date.today()
 
     horarios_disponibles = Disponibilidad.objects.filter(
         barbero=barbero,
-        fecha=fecha_seleccionada,
+        fecha=fecha_seleccionada,  # Ahora sí compara DateField con date
         disponible=True
     ).order_by("hora")
 
