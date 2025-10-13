@@ -7,7 +7,7 @@ from pathlib import Path
 import os
 import django
 from django.core.management.utils import get_random_secret_key
-import dj_database_url  # 👈 IMPORTACIÓN MOVIDA AL INICIO
+import dj_database_url
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -15,6 +15,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 load_dotenv(os.path.join(BASE_DIR, ".env"))
+
 # 👇 SECRET_KEY SEGURA - usa variable de entorno
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-clave-temporal-cambiar-mas-tarde-12345')
 
@@ -38,9 +39,13 @@ INSTALLED_APPS = [
     'servicios',
     'reservas',
 
-    #librerias externas
+    # librerias externas
     'crispy_forms',
     'crispy_bootstrap5',
+    
+    # Cloudinary
+    'cloudinary',
+    'cloudinary_storage',
 ]
 
 MIDDLEWARE = [
@@ -74,6 +79,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'barberia.wsgi.application'
 
+# Database
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv("DB_NAME"),
+        'USER': os.getenv("DB_USER"),
+        'PASSWORD': os.getenv("DB_PASSWORD"),
+        'HOST': os.getenv("DB_HOST"),
+        'PORT': os.getenv("DB_PORT"),
+    }
+}
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -102,7 +118,7 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [STATIC_DIR]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Media files
+# Media files - CONFIGURACIÓN PARA DESARROLLO
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -114,7 +130,7 @@ LOGIN_URL = 'usuarios:login'
 LOGIN_REDIRECT_URL = 'usuarios:dashboard'
 LOGOUT_REDIRECT_URL = 'core:home'
 
-# === Configuración de Email (para producción o pruebas reales) ===
+# Email configuration
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = os.getenv("EMAIL_HOST")
 EMAIL_PORT = os.getenv("EMAIL_PORT")
@@ -123,22 +139,18 @@ EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
 
+# Crispy Forms
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
-# 👇 CONFIGURACIÓN DE BASE DE DATOS PARA DESARROLLO LOCAL (AGREGAR ESTO)
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv("DB_NAME"),
-        'USER': os.getenv("DB_USER"),
-        'PASSWORD': os.getenv("DB_PASSWORD"),
-        'HOST': os.getenv("DB_HOST"),
-        'PORT': os.getenv("DB_PORT"),
-    }
+# 👇 CONFIGURACIÓN DE CLOUDINARY
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME', ''),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY', ''),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET', ''),
 }
 
-
 # 👇 CONFIGURACIÓN PARA RENDER (al final del archivo)
-# Solo ejecutar esta configuración si estamos en Render
 if 'RENDER' in os.environ:
     # Estamos en Render.com - CONFIGURACIÓN DE PRODUCCIÓN
     DEBUG = False
@@ -146,13 +158,13 @@ if 'RENDER' in os.environ:
     
     # Configuraciones de seguridad para producción
     SECURE_SSL_REDIRECT = True
-    SECURE_HSTS_SECONDS = 31536000  # 1 año
+    SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     
-    # SOBREESCRIBIR la configuración de base de datos para Render
+    # Base de datos para Render
     if os.environ.get("DATABASE_URL"):
         DATABASES = {
             "default": dj_database_url.config(
@@ -162,9 +174,10 @@ if 'RENDER' in os.environ:
             )
         }
 
+    # 👇 EN PRODUCCIÓN USAMOS CLOUDINARY
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-# === Configuración de Crispy Forms ===
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-CRISPY_TEMPLATE_PACK = "bootstrap5"
-
+else:
+    # 👇 EN DESARROLLO USAMOS SISTEMA DE ARCHIVOS LOCAL
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'

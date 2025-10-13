@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User 
 from servicios.models import Servicio
+from django.urls import reverse
 
 class Barbero(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE, related_name="barbero")
@@ -9,8 +10,27 @@ class Barbero(models.Model):
     descripcion = models.TextField(blank=True)
     activo = models.BooleanField(default=True)
 
+    class Meta:
+        verbose_name = "Barbero"
+        verbose_name_plural = "Barberos"
+        ordering = ['usuario__first_name']
+    
     def __str__(self):
-        return f"{self.usuario.get_full_name() or self.usuario.username}"
+        return f"{self.usuario.get_full_name()}"
+    
+    def get_absolute_url(self):
+        return reverse('horarios_barbero', kwargs={'barbero_id': self.id})
+    
+    @property
+    def nombre_completo(self):
+        return self.usuario.get_full_name()
+    
+    @property
+    def foto_url(self):
+        """Devuelve la URL de la foto o una por defecto"""
+        if self.foto and hasattr(self.foto, 'url'):
+            return self.foto.url
+        return '/static/images/barbero-default.png'  # Crea esta imagen en tu static
 
 class Disponibilidad(models.Model):
     barbero = models.ForeignKey(Barbero, on_delete=models.CASCADE, related_name="disponibilidades")

@@ -9,16 +9,18 @@
         <div class="col-md-4 mb-4">
           <div class="card shadow-sm border-0 h-100">
             {% if barbero.foto %}
-              <img src="{{ barbero.foto.url }}" class="card-img-top" alt="{{ barbero.usuario.get_full_name }}" style="height: 250px; object-fit: cover;">
+              <img src="{{ barbero.foto.url }}" class="card-img-top" alt="{{ barbero.nombre_completo }}" style="height: 250px; object-fit: cover;">
             {% else %}
-              <div class="text-center py-5 bg-light">
+              <div class="text-center py-5 bg-light" style="height: 250px; display: flex; align-items: center; justify-content: center;">
                 <i class="fas fa-user fa-3x text-secondary"></i>
               </div>
             {% endif %}
             <div class="card-body text-center">
-              <h5 class="card-title">{{ barbero.usuario.get_full_name|default:barbero.usuario.first_name }}</h5>
+              <h5 class="card-title">{{ barbero.nombre_completo }}</h5>
               <p class="text-muted">{{ barbero.especialidad|default:"Barbero profesional" }}</p>
-              <p class="text-muted">{{ barbero.descripcion|default:"Barbero profesional" }}</p>
+              {% if barbero.descripcion %}
+                <p class="card-text">{{ barbero.descripcion }}</p>
+              {% endif %}
               <a href="{% url 'reservas:horarios_barbero' barbero.id %}" class="btn btn-primary mt-2 w-100">
                 Ver Horarios Disponibles
               </a>
