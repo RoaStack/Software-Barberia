@@ -9,7 +9,7 @@
         <div class="col-md-4 mb-4">
           <div class="card shadow-sm border-0 h-100">
             {% if barbero.foto %}
-              <img src="{{ barbero.foto.url }}" class="card-img-top" alt="{{ barbero.nombre_completo }}" style="height: 250px; object-fit: cover;">
+              <img src="{{ barbero.foto_url }}" class="card-img-top" alt="{{ barbero.nombre_completo }}" style="height: 250px; object-fit: cover;">
             {% else %}
               <div class="text-center py-5 bg-light" style="height: 250px; display: flex; align-items: center; justify-content: center;">
                 <i class="fas fa-user fa-3x text-secondary"></i>
