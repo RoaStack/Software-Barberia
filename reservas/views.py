@@ -8,10 +8,7 @@ from .forms import DisponibilidadForm
 from django.db import transaction
 from .emails import enviar_correo_reserva, enviar_correo_confirmacion, enviar_correo_cancelacion
 from datetime import date
-import logging
 
-# Configurar logger
-logger = logging.getLogger(__name__)
 
 # ---------------------------
 # CLIENTE y BARBERO COMPARTEN
@@ -77,14 +74,10 @@ def reservar(request, disponibilidad_id):
             disponibilidad.disponible = False
             disponibilidad.save()
 
-            # ✉️ Enviar correo de reserva (HTML) - CON MANEJO DE ERRORES
-            try:
-                enviar_correo_reserva(cita)
-                messages.success(request, "Tu cita fue reservada con éxito. Se ha enviado un correo de confirmación.")
-            except Exception as e:
-                logger.error(f"Error enviando correo de reserva: {str(e)}")
-                messages.success(request, "Tu cita fue reservada con éxito. Sin embargo, no se pudo enviar el correo de confirmación.")
+            # ✉️ Enviar correo de reserva (HTML) - CORREGIDO
+            enviar_correo_reserva(cita)
 
+            messages.success(request, "Tu cita fue reservada con éxito.")
             return redirect("reservas:mis_reservas")
 
         servicios = Servicio.objects.all()
@@ -114,14 +107,10 @@ def cancelar_reserva(request, cita_id):
     cita.disponibilidad.save()
     cita.save()
 
-    # ✉️ Enviar correo de cancelación (HTML) - CON MANEJO DE ERRORES
-    try:
-        enviar_correo_cancelacion(cita)
-        messages.success(request, "La reserva fue cancelada y se ha enviado un correo de confirmación.")
-    except Exception as e:
-        logger.error(f"Error enviando correo de cancelación: {str(e)}")
-        messages.success(request, "La reserva fue cancelada. Sin embargo, no se pudo enviar el correo de confirmación.")
+    # ✉️ Enviar correo de cancelación (HTML) - CORREGIDO
+    enviar_correo_cancelacion(cita)
 
+    messages.success(request, "La reserva fue cancelada.")
     return redirect("reservas:mis_reservas")
 
 
@@ -132,14 +121,10 @@ def confirmar_reserva(request, cita_id):
     cita.estado = "confirmada"
     cita.save()
 
-    # ✉️ Enviar correo de confirmación (HTML) - CON MANEJO DE ERRORES
-    try:
-        enviar_correo_confirmacion(cita)
-        messages.success(request, "La reserva fue confirmada y se ha enviado un correo al cliente.")
-    except Exception as e:
-        logger.error(f"Error enviando correo de confirmación: {str(e)}")
-        messages.success(request, "La reserva fue confirmada. Sin embargo, no se pudo enviar el correo al cliente.")
+    # ✉️ Enviar correo de confirmación (HTML) - CORREGIDO
+    enviar_correo_confirmacion(cita)
 
+    messages.success(request, "La reserva fue confirmada.")
     return redirect("reservas:mis_reservas")
 
 
