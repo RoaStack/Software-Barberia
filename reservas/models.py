@@ -2,11 +2,12 @@ from django.db import models
 from django.contrib.auth.models import User 
 from servicios.models import Servicio
 from django.urls import reverse
+from cloudinary.models import CloudinaryField
 
 class Barbero(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE, related_name="barbero")
     especialidad = models.CharField(max_length=100, blank=True)
-    foto = models.ImageField(upload_to='barberos/', blank=True, null=True)
+    foto = CloudinaryField('foto', folder='barberos/',null=True,blank=True)
     descripcion = models.TextField(blank=True)
     activo = models.BooleanField(default=True)
 
@@ -14,23 +15,23 @@ class Barbero(models.Model):
         verbose_name = "Barbero"
         verbose_name_plural = "Barberos"
         ordering = ['usuario__first_name']
-    
+
     def __str__(self):
         return f"{self.usuario.get_full_name()}"
-    
+
     def get_absolute_url(self):
         return reverse('horarios_barbero', kwargs={'barbero_id': self.id})
-    
+
     @property
     def nombre_completo(self):
         return self.usuario.get_full_name()
-    
+
     @property
     def foto_url(self):
-        """Devuelve la URL de la foto o una por defecto"""
-        if self.foto and hasattr(self.foto, 'url'):
+        if self.foto:
             return self.foto.url
-        return '/static/images/logoBarberia.png'  # Crea esta imagen en tu static
+        return '/static/images/logoBarberia.png'
+
 
 class Disponibilidad(models.Model):
     barbero = models.ForeignKey(Barbero, on_delete=models.CASCADE, related_name="disponibilidades")
