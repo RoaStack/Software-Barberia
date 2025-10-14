@@ -101,12 +101,15 @@ def reservar(request, disponibilidad_id):
 def mis_reservas(request):
     """Muestra las reservas del cliente o barbero."""
     if request.user.groups.filter(name="Barbero").exists():
-        citas = Cita.objects.filter(disponibilidad__barbero__usuario=request.user).order_by("disponibilidad__fecha", "disponibilidad__hora")
+        # EXCLUIR citas canceladas para el barbero
+        citas = Cita.objects.filter(
+            disponibilidad__barbero__usuario=request.user
+        ).exclude(estado="cancelada").order_by("disponibilidad__fecha", "disponibilidad__hora")
         return render(request, "reservas/mis_reservas_barbero.html", {"citas": citas})
     else:
-        citas = Cita.objects.filter(cliente=request.user).order_by("-disponibilidad__fecha", "-disponibilidad__hora")
+        # EXCLUIR citas canceladas para el cliente
+        citas = Cita.objects.filter(cliente=request.user).exclude(estado="cancelada").order_by("-disponibilidad__fecha", "-disponibilidad__hora")
         return render(request, "reservas/mis_reservas.html", {"citas": citas})
-
 
 @login_required
 def cancelar_reserva(request, cita_id):
@@ -175,7 +178,8 @@ def dashboard_barbero(request):
         messages.error(request, "No tienes permiso para acceder a este panel.")
         return redirect("reservas:mis_reservas")
 
-    citas = Cita.objects.filter(disponibilidad__barbero__usuario=request.user).order_by("disponibilidad__fecha", "disponibilidad__hora")
+    # Filtrar citas excluyendo las canceladas
+    citas = Cita.objects.filter(disponibilidad__barbero__usuario=request.user).exclude(estado="cancelada").order_by("disponibilidad__fecha", "disponibilidad__hora")
     disponibilidades = Disponibilidad.objects.filter(barbero__usuario=request.user).order_by("fecha", "hora")
 
     contexto = {
@@ -185,10 +189,11 @@ def dashboard_barbero(request):
         "pendientes": citas.filter(estado="pendiente").count(),
         "confirmadas": citas.filter(estado="confirmada").count(),
         "completadas": citas.filter(estado="completada").count(),
+        # También puedes mostrar las canceladas por separado si quieres
+        "canceladas": Cita.objects.filter(disponibilidad__barbero__usuario=request.user, estado="cancelada").count(),
     }
 
     return render(request, "reservas/dashboard_barbero.html", contexto)
-
 
 # ---------------------------
 # DISPONIBILIDAD MÚLTIPLE
