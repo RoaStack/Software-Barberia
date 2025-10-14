@@ -1,39 +1,77 @@
-{% extends 'base_cliente.html' %}
+{% extends 'base_clientee.html' %}
+{% load static %}
+
 {% block cliente_content %}
-<div class="container py-4">
-  <h2 class="text-center mb-4">Nuestros Barberos</h2>
+<div class="container py-5">
+<h2 class="text-center mb-5" style="color: #c9a227; font-weight: 700;">
+    Conoce a Nuestros Barberos
+  </h2>
+
 
   {% if barberos %}
-    <div class="row">
+    <div class="row g-4 justify-content-center">
       {% for barbero in barberos %}
-        <div class="col-md-4 mb-4">
-          <div class="card shadow-sm border-0 h-100">
+        <div class="col-sm-6 col-md-4 col-lg-3">
+          <div class="card shadow-lg border-0 rounded-4 overflow-hidden h-100 transition-card">
+
             {% if barbero.foto %}
-              <img src="{{ barbero.foto_url }}" class="card-img-top" alt="{{ barbero.nombre_completo }}" style="height: 250px; object-fit: cover;">
+              <div class="image-wrapper bg-dark">
+                <img src="{{ barbero.foto_url }}" 
+                     alt="{{ barbero.nombre_completo }}"
+                     class="img-fluid">
+              </div>
             {% else %}
-              <div class="text-center py-5 bg-light" style="height: 250px; display: flex; align-items: center; justify-content: center;">
-                <i class="fas fa-user fa-3x text-secondary"></i>
+              <div class="d-flex align-items-center justify-content-center bg-light image-wrapper">
+                <i class="fas fa-user fa-4x text-secondary"></i>
               </div>
             {% endif %}
-            <div class="card-body text-center">
-              <h5 class="card-title">{{ barbero.nombre_completo }}</h5>
-              <p class="text-muted">{{ barbero.especialidad|default:"Barbero profesional" }}</p>
-              {% if barbero.descripcion %}
-                <p class="card-text">{{ barbero.descripcion }}</p>
-              {% endif %}
-              <a href="{% url 'reservas:horarios_barbero' barbero.id %}" class="btn btn-primary mt-2 w-100">
+
+            <div class="card-body text-center bg-white">
+              <h5 class="card-title fw-semibold mb-1 text-capitalize text-dark">
+                {{ barbero.nombre_completo }}
+              </h5>
+              <p class="text-muted small mb-3">
+                {{ barbero.especialidad|default:"barbero" }}
+              </p>
+              <a href="{% url 'reservas:horarios_barbero' barbero.id %}" 
+                 class="btn text-white fw-semibold py-2 rounded-pill w-100"
+                 style="background-color: #c9a227;">
                 Ver Horarios Disponibles
               </a>
             </div>
+
           </div>
         </div>
       {% endfor %}
     </div>
   {% else %}
-    <div class="alert alert-info text-center">
-      <h4>No hay barberos disponibles</h4>
+    <div class="alert alert-info text-center mt-5">
+      <h4 class="fw-bold mb-1">No hay barberos disponibles</h4>
       <p>Por favor, intenta más tarde.</p>
     </div>
   {% endif %}
 </div>
+
+<style>
+  .transition-card {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .transition-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  }
+  .image-wrapper {
+    width: 100%;
+    aspect-ratio: 4 / 3; /* Esto mantiene la proporción */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f9fa;
+  }
+  .image-wrapper img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* 👈 Muestra la imagen completa sin recortarla */
+  }
+</style>
 {% endblock %}
