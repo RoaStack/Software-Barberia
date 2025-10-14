@@ -160,13 +160,25 @@ def dashboard_barbero(request):
 
 @login_required
 def gestionar_disponibilidad(request):
-    """Permite al barbero crear varias horas para una misma fecha."""
+    """Permite al barbero crear varias horas para una misma fecha y navegar por días."""
     if not request.user.groups.filter(name="Barbero").exists():
         messages.error(request, "No tienes permiso para gestionar disponibilidades.")
         return redirect("reservas:mis_reservas")
 
     barbero = Barbero.objects.get(usuario=request.user)
 
+    # --- Determinar la fecha seleccionada ---
+    from datetime import timedelta
+    fecha_str = request.GET.get("fecha")
+    if fecha_str:
+        try:
+            fecha_seleccionada = date.fromisoformat(fecha_str)
+        except (ValueError, TypeError):
+            fecha_seleccionada = date.today()
+    else:
+        fecha_seleccionada = date.today()
+
+    # --- Procesar creación de disponibilidades ---
     if request.method == 'POST':
         form = DisponibilidadForm(request.POST)
         if form.is_valid():
@@ -185,15 +197,23 @@ def gestionar_disponibilidad(request):
                     creadas += 1
 
             messages.success(request, f"{creadas} horas agregadas correctamente para {fecha}.")
-            return redirect('reservas:gestionar_disponibilidad')
+            return redirect(f"{request.path}?fecha={fecha}")
     else:
         form = DisponibilidadForm()
 
-    disponibilidades = Disponibilidad.objects.filter(barbero=barbero).order_by('-fecha', 'hora')
-    return render(request, 'reservas/gestionar_disponibilidad.html', {
+    # --- Mostrar solo las disponibilidades del día seleccionado ---
+    disponibilidades = Disponibilidad.objects.filter(
+        barbero=barbero,
+        fecha=fecha_seleccionada
+    ).order_by('hora')
+
+    contexto = {
         'form': form,
-        'disponibilidades': disponibilidades
-    })
+        'disponibilidades': disponibilidades,
+        'fecha_seleccionada': fecha_seleccionada,
+    }
+
+    return render(request, 'reservas/gestionar_disponibilidad.html', contexto)
 
 
 @login_required
