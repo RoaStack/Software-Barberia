@@ -46,6 +46,7 @@ class Disponibilidad(models.Model):
     def __str__(self):
         estado = "Disponible" if self.disponible else "No disponible"
         return f"{self.barbero} - {self.fecha} {self.hora.strftime('%H:%M')} ({estado})"
+    
 class Cita(models.Model):
     ESTADOS = [
         ('pendiente', 'Pendiente'),
@@ -55,9 +56,9 @@ class Cita(models.Model):
     ]
 
     cliente = models.ForeignKey(User, on_delete=models.CASCADE, related_name="citas")
-    disponibilidad = models.OneToOneField(Disponibilidad, on_delete=models.CASCADE, related_name="cita")
+    disponibilidad = models.ForeignKey(Disponibilidad, on_delete=models.CASCADE, related_name="citas")  # CAMBIADO: OneToOne → ForeignKey
     servicio = models.ForeignKey(Servicio, on_delete=models.SET_NULL, null=True, blank=True)
-    duracion_servicio = models.PositiveIntegerField(default=30)  # 🔹 nuevo
+    duracion_servicio = models.PositiveIntegerField(default=30)
     estado = models.CharField(max_length=20, choices=ESTADOS, default='pendiente')
     notas = models.TextField(blank=True)
     creado_en = models.DateTimeField(auto_now_add=True)
@@ -65,6 +66,14 @@ class Cita(models.Model):
 
     class Meta:
         ordering = ['-disponibilidad__fecha', '-disponibilidad__hora']
+        # Agrega esta constraint para evitar reservas duplicadas activas
+        constraints = [
+            models.UniqueConstraint(
+                fields=['disponibilidad'], 
+                condition=models.Q(estado__in=['pendiente', 'confirmada']),
+                name='unique_disponibilidad_activa'
+            )
+        ]
 
     def __str__(self):
-        return f"{self.cliente.username} - {self.disponibilidad.fecha} {self.disponibilidad.hora}"
+        return f"{self.cliente.username} - {self.disponibilidad.fecha} {self.disponibilidad.hora} ({self.estado})"

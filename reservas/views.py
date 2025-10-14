@@ -58,6 +58,16 @@ def reservar(request, disponibilidad_id):
     with transaction.atomic():
         disponibilidad = Disponibilidad.objects.select_for_update().get(id=disponibilidad_id, disponible=True)
         
+        # Verificar si ya existe una cita activa para esta disponibilidad
+        cita_activa = Cita.objects.filter(
+            disponibilidad=disponibilidad,
+            estado__in=['pendiente', 'confirmada']
+        ).exists()
+        
+        if cita_activa:
+            messages.error(request, "Esta hora ya tiene una reserva activa.")
+            return redirect("reservas:disponibilidades")
+        
         if request.method == "POST":
             servicio_id = request.POST.get("servicio")
             servicio = get_object_or_404(Servicio, id=servicio_id)
@@ -74,7 +84,7 @@ def reservar(request, disponibilidad_id):
             disponibilidad.disponible = False
             disponibilidad.save()
 
-            # ✉️ Enviar correo de reserva (HTML) - CORREGIDO
+            # ✉️ Enviar correo de reserva
             enviar_correo_reserva(cita)
 
             messages.success(request, "Tu cita fue reservada con éxito.")
@@ -125,6 +135,32 @@ def confirmar_reserva(request, cita_id):
     enviar_correo_confirmacion(cita)
 
     messages.success(request, "La reserva fue confirmada.")
+    return redirect("reservas:mis_reservas")
+
+
+
+@login_required
+def cancelar_reserva_barbero(request, cita_id):
+    """Permite al barbero cancelar una cita de sus clientes."""
+    cita = get_object_or_404(Cita, id=cita_id, disponibilidad__barbero__usuario=request.user)
+    
+    # Solo permitir cancelar citas pendientes o confirmadas
+    if cita.estado not in ["pendiente", "confirmada"]:
+        messages.error(request, "No se puede cancelar una cita que no esté pendiente o confirmada.")
+        return redirect("reservas:mis_reservas")
+
+    # Guardar el estado anterior para el mensaje
+    estado_anterior = cita.estado
+    
+    cita.estado = "cancelada"
+    cita.disponibilidad.disponible = True
+    cita.disponibilidad.save()
+    cita.save()
+
+    # ✉️ Enviar correo de cancelación
+    enviar_correo_cancelacion(cita)
+
+    messages.success(request, f"La reserva ({estado_anterior}) fue cancelada correctamente.")
     return redirect("reservas:mis_reservas")
 
 
