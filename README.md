@@ -59,8 +59,7 @@ barberia/
 └── README.md              # Documentación del proyecto
 ```
 ---
-⚙️ Instalación y ejecución local
-## 1️⃣ clonar el repositorio
+## ⚙️ Instalación y ejecución local
 1️⃣ Clonar el repositorio
 
 git clone https://github.com/tuusuario/software-barberia.git
@@ -104,7 +103,7 @@ python manage.py runserver
 
 Luego accede a 👉 http://127.0.0.1:8000/
 ---
-🔒 Seguridad
+## 🔒 Seguridad
 
 El sistema incluye múltiples medidas de seguridad integradas:
 
@@ -118,14 +117,14 @@ Encriptación de información sensible
 
 Validación y saneamiento de formularios
 ---
-✉️ Envío de correos electrónicos
+## ✉️ Envío de correos electrónicos
 
 El sistema utiliza SMTP configurado en settings.py para enviar notificaciones automáticas de reservas y confirmaciones.
 Solo debes configurar tus credenciales en el archivo .env.
 ---
-🖼️ Capturas de pantalla
+## 🖼️ Capturas de pantalla
 ---
-🧰 Tecnologías utilizadas
+## 🧰 Tecnologías utilizadas
 
 Python 3.12+
 
@@ -137,7 +136,7 @@ SQLite3
 
 Render (para despliegue en la nube)
 ---
-📜 Licencia
+## 📜 Licencia
 
 MIT License
 
