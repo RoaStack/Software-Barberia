@@ -58,6 +58,16 @@ def reservar(request, disponibilidad_id):
     with transaction.atomic():
         disponibilidad = Disponibilidad.objects.select_for_update().get(id=disponibilidad_id, disponible=True)
         
+        # Verificar si ya existe una cita activa para esta disponibilidad
+        cita_activa = Cita.objects.filter(
+            disponibilidad=disponibilidad,
+            estado__in=['pendiente', 'confirmada']
+        ).exists()
+        
+        if cita_activa:
+            messages.error(request, "Esta hora ya tiene una reserva activa.")
+            return redirect("reservas:disponibilidades")
+        
         if request.method == "POST":
             servicio_id = request.POST.get("servicio")
             servicio = get_object_or_404(Servicio, id=servicio_id)
@@ -74,7 +84,7 @@ def reservar(request, disponibilidad_id):
             disponibilidad.disponible = False
             disponibilidad.save()
 
-            # ✉️ Enviar correo de reserva (HTML) - CORREGIDO
+            # ✉️ Enviar correo de reserva
             enviar_correo_reserva(cita)
 
             messages.success(request, "Tu cita fue reservada con éxito.")
@@ -91,12 +101,15 @@ def reservar(request, disponibilidad_id):
 def mis_reservas(request):
     """Muestra las reservas del cliente o barbero."""
     if request.user.groups.filter(name="Barbero").exists():
-        citas = Cita.objects.filter(disponibilidad__barbero__usuario=request.user).order_by("disponibilidad__fecha", "disponibilidad__hora")
+        # EXCLUIR citas canceladas para el barbero
+        citas = Cita.objects.filter(
+            disponibilidad__barbero__usuario=request.user
+        ).exclude(estado="cancelada").order_by("disponibilidad__fecha", "disponibilidad__hora")
         return render(request, "reservas/mis_reservas_barbero.html", {"citas": citas})
     else:
-        citas = Cita.objects.filter(cliente=request.user).order_by("-disponibilidad__fecha", "-disponibilidad__hora")
+        # EXCLUIR citas canceladas para el cliente
+        citas = Cita.objects.filter(cliente=request.user).exclude(estado="cancelada").order_by("-disponibilidad__fecha", "-disponibilidad__hora")
         return render(request, "reservas/mis_reservas.html", {"citas": citas})
-
 
 @login_required
 def cancelar_reserva(request, cita_id):
@@ -128,6 +141,32 @@ def confirmar_reserva(request, cita_id):
     return redirect("reservas:mis_reservas")
 
 
+
+@login_required
+def cancelar_reserva_barbero(request, cita_id):
+    """Permite al barbero cancelar una cita de sus clientes."""
+    cita = get_object_or_404(Cita, id=cita_id, disponibilidad__barbero__usuario=request.user)
+    
+    # Solo permitir cancelar citas pendientes o confirmadas
+    if cita.estado not in ["pendiente", "confirmada"]:
+        messages.error(request, "No se puede cancelar una cita que no esté pendiente o confirmada.")
+        return redirect("reservas:mis_reservas")
+
+    # Guardar el estado anterior para el mensaje
+    estado_anterior = cita.estado
+    
+    cita.estado = "cancelada"
+    cita.disponibilidad.disponible = True
+    cita.disponibilidad.save()
+    cita.save()
+
+    # ✉️ Enviar correo de cancelación
+    enviar_correo_cancelacion(cita)
+
+    messages.success(request, f"La reserva ({estado_anterior}) fue cancelada correctamente.")
+    return redirect("reservas:mis_reservas")
+
+
 # ---------------------------
 # DASHBOARD DEL BARBERO
 # ---------------------------
@@ -139,7 +178,8 @@ def dashboard_barbero(request):
         messages.error(request, "No tienes permiso para acceder a este panel.")
         return redirect("reservas:mis_reservas")
 
-    citas = Cita.objects.filter(disponibilidad__barbero__usuario=request.user).order_by("disponibilidad__fecha", "disponibilidad__hora")
+    # Filtrar citas excluyendo las canceladas
+    citas = Cita.objects.filter(disponibilidad__barbero__usuario=request.user).exclude(estado="cancelada").order_by("disponibilidad__fecha", "disponibilidad__hora")
     disponibilidades = Disponibilidad.objects.filter(barbero__usuario=request.user).order_by("fecha", "hora")
 
     contexto = {
@@ -149,10 +189,11 @@ def dashboard_barbero(request):
         "pendientes": citas.filter(estado="pendiente").count(),
         "confirmadas": citas.filter(estado="confirmada").count(),
         "completadas": citas.filter(estado="completada").count(),
+        # También puedes mostrar las canceladas por separado si quieres
+        "canceladas": Cita.objects.filter(disponibilidad__barbero__usuario=request.user, estado="cancelada").count(),
     }
 
     return render(request, "reservas/dashboard_barbero.html", contexto)
-
 
 # ---------------------------
 # DISPONIBILIDAD MÚLTIPLE
@@ -160,13 +201,25 @@ def dashboard_barbero(request):
 
 @login_required
 def gestionar_disponibilidad(request):
-    """Permite al barbero crear varias horas para una misma fecha."""
+    """Permite al barbero crear varias horas para una misma fecha y navegar por días."""
     if not request.user.groups.filter(name="Barbero").exists():
         messages.error(request, "No tienes permiso para gestionar disponibilidades.")
         return redirect("reservas:mis_reservas")
 
     barbero = Barbero.objects.get(usuario=request.user)
 
+    # --- Determinar la fecha seleccionada ---
+    from datetime import timedelta
+    fecha_str = request.GET.get("fecha")
+    if fecha_str:
+        try:
+            fecha_seleccionada = date.fromisoformat(fecha_str)
+        except (ValueError, TypeError):
+            fecha_seleccionada = date.today()
+    else:
+        fecha_seleccionada = date.today()
+
+    # --- Procesar creación de disponibilidades ---
     if request.method == 'POST':
         form = DisponibilidadForm(request.POST)
         if form.is_valid():
@@ -185,15 +238,23 @@ def gestionar_disponibilidad(request):
                     creadas += 1
 
             messages.success(request, f"{creadas} horas agregadas correctamente para {fecha}.")
-            return redirect('reservas:gestionar_disponibilidad')
+            return redirect(f"{request.path}?fecha={fecha}")
     else:
         form = DisponibilidadForm()
 
-    disponibilidades = Disponibilidad.objects.filter(barbero=barbero).order_by('-fecha', 'hora')
-    return render(request, 'reservas/gestionar_disponibilidad.html', {
+    # --- Mostrar solo las disponibilidades del día seleccionado ---
+    disponibilidades = Disponibilidad.objects.filter(
+        barbero=barbero,
+        fecha=fecha_seleccionada
+    ).order_by('hora')
+
+    contexto = {
         'form': form,
-        'disponibilidades': disponibilidades
-    })
+        'disponibilidades': disponibilidades,
+        'fecha_seleccionada': fecha_seleccionada,
+    }
+
+    return render(request, 'reservas/gestionar_disponibilidad.html', contexto)
 
 
 @login_required
@@ -209,14 +270,24 @@ def lista_barberos(request):
     barberos = Barbero.objects.all()
     return render(request, "reservas/lista_barberos.html", {"barberos": barberos})
 
+
 @login_required
 def horarios_barbero(request, barbero_id):
     barbero = get_object_or_404(Barbero, id=barbero_id)
-    fecha_seleccionada = request.GET.get("fecha", date.today())
+    
+    # Obtener y convertir la fecha
+    fecha_str = request.GET.get("fecha")
+    if fecha_str:
+        try:
+            fecha_seleccionada = date.fromisoformat(fecha_str)
+        except (ValueError, TypeError):
+            fecha_seleccionada = date.today()
+    else:
+        fecha_seleccionada = date.today()
 
     horarios_disponibles = Disponibilidad.objects.filter(
         barbero=barbero,
-        fecha=fecha_seleccionada,
+        fecha=fecha_seleccionada,  # Ahora sí compara DateField con date
         disponible=True
     ).order_by("hora")
 

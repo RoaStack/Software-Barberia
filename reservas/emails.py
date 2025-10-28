@@ -1,17 +1,21 @@
-from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
-from django.conf import settings
+import os
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
 def enviar_correo_html(asunto, template, contexto, destinatarios):
-    """Función genérica para enviar correos HTML."""
     html_content = render_to_string(template, contexto)
-    text_content = (
-        f"{asunto}\n\nPor favor, visualiza este correo en formato HTML para ver los detalles correctamente."
+    message = Mail(
+        from_email=os.getenv("DEFAULT_FROM_EMAIL"),
+        to_emails=destinatarios,
+        subject=asunto,
+        html_content=html_content
     )
-
-    email = EmailMultiAlternatives(asunto, text_content, settings.DEFAULT_FROM_EMAIL, destinatarios)
-    email.attach_alternative(html_content, "text/html")
-    email.send()
+    try:
+        sg = SendGridAPIClient(os.getenv("SENDGRID_API_KEY"))
+        sg.send(message)
+    except Exception as e:
+        print(f"❌ Error al enviar correo: {e}")
 
 # -----------------------------
 # CORREOS ESPECÍFICOS

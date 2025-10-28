@@ -22,7 +22,7 @@
       {% for horario in horarios_disponibles %}
         <div class="col-md-3 mb-3">
           <a href="{% url 'reservas:reservar' horario.id %}" 
-             class="btn btn-outline-primary w-100 py-3 shadow-sm">
+             class="btn btn-horario w-100 py-3 shadow-sm">
             <strong>{{ horario.hora|time:"H:i" }}</strong>
           </a>
         </div>
@@ -36,4 +36,31 @@
     </a>
   </div>
 </div>
+
+<style>
+/* 🎨 Estilo personalizado para botones de horarios */
+.btn-horario {
+  border: 2px solid #d4af37 !important;  /* borde dorado */
+  color: #000000 !important;             /* texto negro */
+  background-color: transparent !important; /* fondo transparente */
+  font-weight: bold;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+/* Hover: fondo dorado y texto negro */
+.btn-horario:hover {
+  background-color: #d4af37 !important;
+  color: #000000 !important;
+  transform: scale(1.05);
+}
+
+/* Estado activo o clicado */
+.btn-horario:active,
+.btn-horario:focus {
+  background-color: #b8952e !important;  /* dorado más oscuro */
+  color: #000000 !important;
+  border-color: #b8952e !important;
+}
+</style>
 {% endblock %}

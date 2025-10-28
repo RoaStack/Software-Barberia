@@ -1,4 +1,4 @@
-{% extends "base_barbero.html" %}
+{% extends "base_barberoo.html" %}
 {% block barbero_content %}
 <div class="container mt-4">
   <h3 class="fw-bold text-center mb-4">Gestionar Disponibilidades</h3>
@@ -20,6 +20,22 @@
     </div>
   </form>
 
+  <!-- 🔹 Navegación por días -->
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-3 gap-2">
+
+  <div class="d-flex align-items-center gap-2">
+    <button class="btn btn-outline-secondary" id="prevDay">← Día anterior</button>
+    <button class="btn btn-outline-secondary" id="nextDay">Día siguiente →</button>
+  </div>
+
+  <!-- 🔹 Selector de fecha para filtrar -->
+  <div class="d-flex align-items-center gap-2">
+    <label for="filterFecha" class="fw-semibold mb-0">Filtrar por fecha:</label>
+    <input type="date" id="filterFecha" class="form-control" value="{{ fecha_seleccionada|date:'Y-m-d' }}">
+  </div>
+</div>
+
+
   <div class="card shadow-sm">
     <div class="card-body">
       <h5 class="fw-bold mb-3">Tus horarios</h5>
@@ -36,7 +52,7 @@
           <tbody>
             {% for d in disponibilidades %}
               <tr>
-                <td>{{ d.fecha }}</td>
+                <td>{{ d.fecha|date:"j \\d\\e F \\d\\e Y" }}</td>
                 <td>{{ d.hora }}</td>
                 <td>
                   {% if d.disponible %}
@@ -46,48 +62,73 @@
                   {% endif %}
                 </td>
                 <td>
+                  {% if d.disponible %}
                   <a href="{% url 'reservas:eliminar_disponibilidad' d.id %}" class="btn btn-sm btn-danger">Eliminar</a>
-                </td>
+                  {% else %}
+                  <a href="#" class="btn btn-sm btn-primary disabled" tabindex="-1" aria-disabled="true">Ocupado</a>
+                  {% endif %}
+                  </td>
+
               </tr>
             {% endfor %}
           </tbody>
         </table>
       {% else %}
-        <p class="text-muted text-center">Aún no tienes horarios disponibles.</p>
+        <p class="text-muted text-center">No tienes horarios para este día.</p>
       {% endif %}
     </div>
   </div>
 </div>
 
-<!-- JavaScript para mejorar la experiencia del calendario -->
 <script>
-  // Establecer fecha mínima como hoy
   document.addEventListener('DOMContentLoaded', function() {
+    const currentDate = new Date("{{ fecha_seleccionada|date:'Y-m-d' }}");
+
+    document.getElementById('prevDay').addEventListener('click', function() {
+      const prev = new Date(currentDate);
+      prev.setDate(prev.getDate() - 1);
+      window.location.href = `?fecha=${prev.toISOString().split('T')[0]}`;
+    });
+
+    document.getElementById('nextDay').addEventListener('click', function() {
+      const next = new Date(currentDate);
+      next.setDate(next.getDate() + 1);
+      window.location.href = `?fecha=${next.toISOString().split('T')[0]}`;
+    });
+
+    // Mantener fecha mínima para el input
     const fechaInput = document.getElementById('id_fecha');
     const today = new Date().toISOString().split('T')[0];
     fechaInput.min = today;
-    
-    // Opcional: agregar algún estilo adicional
-    fechaInput.addEventListener('focus', function() {
-      this.style.cursor = 'pointer';
+  });
+  document.addEventListener('DOMContentLoaded', function() {
+    const currentDate = new Date("{{ fecha_seleccionada|date:'Y-m-d' }}");
+
+    document.getElementById('prevDay').addEventListener('click', function() {
+      const prev = new Date(currentDate);
+      prev.setDate(prev.getDate() - 1);
+      window.location.href = `?fecha=${prev.toISOString().split('T')[0]}`;
     });
+
+    document.getElementById('nextDay').addEventListener('click', function() {
+      const next = new Date(currentDate);
+      next.setDate(next.getDate() + 1);
+      window.location.href = `?fecha=${next.toISOString().split('T')[0]}`;
+    });
+
+    // 🔹 Filtro manual de fecha
+    const filterInput = document.getElementById('filterFecha');
+    filterInput.addEventListener('change', function() {
+      const selected = this.value;
+      if (selected) {
+        window.location.href = `?fecha=${selected}`;
+      }
+    });
+
+    // 🔹 Fecha mínima para evitar seleccionar días pasados
+    const today = new Date().toISOString().split('T')[0];
+    filterInput.min = today;
   });
 </script>
 
-<style>
-  /* Estilos opcionales para mejorar la apariencia del calendario */
-  input[type="date"] {
-    cursor: pointer;
-  }
-  
-  input[type="date"]::-webkit-calendar-picker-indicator {
-    cursor: pointer;
-    padding: 5px;
-    border-radius: 3px;
-  }
-  
-  input[type="date"]::-webkit-calendar-picker-indicator:hover {
-    background-color: #e9ecef;
-  }
-</style>
 {% endblock %}

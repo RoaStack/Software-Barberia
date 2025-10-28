@@ -10,6 +10,7 @@
     </div>
   </div>
 
+  <!-- Primeras dos cards -->
   <div class="col-md-6 mb-4">
     <div class="card shadow-sm border-0 h-100">
       <div class="card-body text-center">
@@ -31,15 +32,21 @@
       </div>
     </div>
   </div>
-</div>
-  <div class="col-md-6 mb-4">
-    <div class="card shadow-sm border-0 h-100">
-      <div class="card-body text-center">
-        <i class="fas fa-calendar-check fa-3x mb-3" style="color:#d4af37;"></i>
-        <h5 class="fw-bold">Reserva tu hora</h5>
-        <p class="text-muted">Agenda tu cita con tu barbero de preferencia</p>
-        <a href="{% url 'reservas:lista_barberos' %}" class="btn btn-primary">Reservar</a>
+
+  <!-- Tercera card centrada -->
+  <div class="col-12 mb-4">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card shadow-sm border-0 h-100">
+          <div class="card-body text-center">
+            <i class="fas fa-calendar-plus fa-3x mb-3" style="color:#d4af37;"></i>
+            <h5 class="fw-bold">Reserva tu hora</h5>
+            <p class="text-muted">Agenda tu cita con tu barbero de preferencia</p>
+            <a href="{% url 'reservas:lista_barberos' %}" class="btn btn-primary">Reservar</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+</div>
 {% endblock %}

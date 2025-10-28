@@ -1,6 +1,6 @@
 from datetime import time
 from django import forms
-from .models import Disponibilidad
+from .models import Barbero
 
 # Rango de horas de trabajo (puedes ajustarlo libremente)
 HORAS_OPCIONES = [

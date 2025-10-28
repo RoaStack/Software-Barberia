@@ -1,4 +1,4 @@
-{% extends "base_barbero.html" %}
+{% extends "base_barberoo.html" %}
 {% block barbero_content %}
 <div class="container py-4">
   <h3 class="mb-4">Reservas de Mis Clientes</h3>
@@ -10,7 +10,7 @@
         <th>Fecha</th>
         <th>Hora</th>
         <th>Estado</th>
-        <th>Acción</th>
+        <th class="text-center">Acción</th>
       </tr>
     </thead>
     <tbody>
@@ -27,20 +27,29 @@
               <span class="badge bg-primary">Confirmada</span>
             {% elif cita.estado == "completada" %}
               <span class="badge bg-success">Completada</span>
+            {% elif cita.estado == "cancelada" %}
+              <span class="badge bg-danger">Cancelada</span>
             {% else %}
               <span class="badge bg-secondary">{{ cita.estado }}</span>
             {% endif %}
           </td>
-          <td>
-            {% if cita.estado == "pendiente" %}
-              <a href="{% url 'reservas:confirmar_reserva' cita.id %}" class="btn btn-sm btn-success">Confirmar</a>
-              
-            {% elif cita.estado == "confirmada" %}
-              <button class="btn btn-sm btn-secondary" disabled>Confirmada</button>
+          <td class="text-center">
+            <div class="d-flex justify-content-center gap-2 align-items-center">  <!-- Contenedor flex en línea -->
+              {% if cita.estado == "pendiente" %}
+                <a href="{% url 'reservas:confirmar_reserva' cita.id %}" class="btn btn-sm btn-success">Confirmar</a>
+                <a href="{% url 'reservas:cancelar_reserva_barbero' cita.id %}" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que quieres cancelar esta reserva?')">Cancelar</a>
+                
+              {% elif cita.estado == "confirmada" %}
+                <button class="btn btn-sm btn-secondary" disabled>Confirmada</button>
+                <a href="{% url 'reservas:cancelar_reserva_barbero' cita.id %}" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que quieres cancelar esta reserva?')">Cancelar</a>
 
-            {% else %}
-              <button class="btn btn-sm btn-light" disabled>-</button>
-            {% endif %}
+              {% elif cita.estado == "cancelada" %}
+                <button class="btn btn-sm btn-light" disabled>Cancelada</button>
+                
+              {% else %}
+                <button class="btn btn-sm btn-light" disabled>-</button>
+              {% endif %}
+            </div>
           </td>
         </tr>
       {% empty %}
