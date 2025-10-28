@@ -116,11 +116,13 @@ Sesiones seguras y validación de permisos
 Encriptación de información sensible
 
 Validación y saneamiento de formularios
+
 ---
 ## ✉️ Envío de correos electrónicos
 
 El sistema utiliza SMTP configurado en settings.py para enviar notificaciones automáticas de reservas y confirmaciones.
 Solo debes configurar tus credenciales en el archivo .env.
+
 ---
 ## 🖼️ Capturas de pantalla
 ---
@@ -135,6 +137,7 @@ HTML5 / CSS3 / Bootstrap 5
 SQLite3
 
 Render (para despliegue en la nube)
+
 ---
 ## 📜 Licencia
 
