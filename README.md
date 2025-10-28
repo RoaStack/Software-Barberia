@@ -127,7 +127,7 @@ Solo debes configurar tus credenciales en el archivo .env.
 
 ---
 ## 🖼️ Capturas de pantalla
-![Home](assets/homeBarberia1.png)
+![Home](assets/homeBarberia.png)
 ---
 ## 🧰 Tecnologías utilizadas
 
