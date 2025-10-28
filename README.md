@@ -1,5 +1,5 @@
 # 💈 Barbería Elite - Sistema de Gestión
-
+![Home](assets/home.png)
 Bienvenidos a **Barbería Elite**, un sistema web desarrollado con **Django** para la administración integral de una barbería.  
 Permite a los clientes reservar citas en línea, a los barberos gestionar sus horarios y a los administradores controlar servicios, usuarios y disponibilidad desde un panel centralizado.
 
@@ -127,7 +127,7 @@ Solo debes configurar tus credenciales en el archivo .env.
 
 ---
 ## 🖼️ Capturas de pantalla
-![Home](assets/home.png)
+
 ---
 ## 🧰 Tecnologías utilizadas
 
