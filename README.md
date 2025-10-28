@@ -130,7 +130,7 @@ Solo debes configurar tus credenciales en el archivo .env.
 ![Home](assets/home.png)
 ![HomeServicios](assets/homeServicios.png)
 ![CrearUsuario](assets/CrearUsuario.png)
-![InicioSesion](assets/inicioSesion.png)
+![InicioSesion](assets/InicioSesion.png)
 ![PanelCliente](assets/panelCliente.png)
 ![SeleccionBarbero](assets/seleccionBarbero.png)
 ![HorasDisponiblesBarbero](assets/horasDisponibleBarbero.png)
