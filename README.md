@@ -41,9 +41,8 @@ Durante este proyecto se aplicaron metodologías colaborativas con **Git** y **G
 
 ---
 
-
-```
 ## 📁 Estructura del proyecto
+```
 barberia/
 ├── core/                  # App principal (inicio, vistas generales)
 ├── usuarios/              # Gestión de usuarios, roles y autenticación
