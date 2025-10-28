@@ -127,7 +127,21 @@ Solo debes configurar tus credenciales en el archivo .env.
 
 ---
 ## 🖼️ Capturas de pantalla
-
+![Home](assets/home.png)
+![HomeServicios](assets/homeServicios.png)
+![CrearUsuario](assets/CrearUsuario.png)
+![InicioSesion](assets/inicioSesion.png)
+![PanelCliente](assets/panelCliente.png)
+![SeleccionBarbero](assets/seleccionBarbero.png)
+![HorasDisponiblesBarbero](assets/horasDisponibleBarbero.png)
+![reservaCita](assets/reservaCita.png)
+![correoReserva](assets/correoReservaCreada.png)
+![reservasCliente](assets/reservasCliente.png)
+![panelBarbero](assets/panelBarbero.png)
+![GestionDeHorarios](assets/gestionHorariosBarbero.png)
+![reservasClienteBarbero](assets/ReservasClienteBarbero.png)
+![CorreoConfirmacion](assets/ConfirmacionCitaCorreo.png)
+![CorreoCancelacion](assets/CancelacionCitaCorreo.png)
 ---
 ## 🧰 Tecnologías utilizadas
 
