@@ -62,7 +62,7 @@ barberia/
 ```
 ---
 ## 🗃️​ Modelamiento Base De Datos
-![Home](assets/Base_de_datos.png)
+![BaseDeDatos](assets/Base_de_datos.png)
 
 ---
 ## ⚙️ Instalación y ejecución local
