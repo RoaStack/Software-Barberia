@@ -1,52 +1,49 @@
-##💈 Barbería Elite - Sistema de Gestión
+# 💈 Barbería Elite - Sistema de Gestión
 
-Bienvenidos a Barbería Elite, un sistema web desarrollado con Django para la administración integral de una barbería.
+Bienvenidos a **Barbería Elite**, un sistema web desarrollado con **Django** para la administración integral de una barbería.  
 Permite a los clientes reservar citas en línea, a los barberos gestionar sus horarios y a los administradores controlar servicios, usuarios y disponibilidad desde un panel centralizado.
 
-##🌐 Descripción
+---
 
-Barbería Elite optimiza el proceso de agendamiento y gestión de servicios en barberías mediante una plataforma web dinámica con tres roles principales:
+## 🌐 Descripción
 
-Cliente: puede registrarse, iniciar sesión y reservar citas en tiempo real.
+**Barbería Elite** optimiza el proceso de agendamiento y gestión de servicios en barberías mediante una plataforma web dinámica con tres roles principales:
 
-Barbero: administra su disponibilidad y confirma citas.
+- **Cliente:** puede registrarse, iniciar sesión y reservar citas en tiempo real.  
+- **Barbero:** administra su disponibilidad y confirma citas.  
+- **Administrador:** controla usuarios, servicios, horarios y precios desde un panel de control.
 
-Administrador: controla usuarios, servicios, horarios y precios desde un panel de control.
+---
 
-El sistema incluye:
+### 🔧 Características principales
 
-Registro y autenticación de usuarios con distintos roles
+- Registro y autenticación de usuarios con distintos roles  
+- Gestión de servicios y precios  
+- Disponibilidad dinámica por barbero  
+- Sistema de reservas en tiempo real  
+- Envío automático de correos electrónicos al confirmar citas  
+- Panel administrativo completo  
+- Seguridad integrada mediante el sistema de autenticación de Django  
 
-Gestión de servicios y precios
+---
 
-Disponibilidad dinámica por barbero
+## 👥 Colaboradores
 
-Sistema de reservas en tiempo real
+- **Diego Roa** – [@RoaStack](https://github.com/RoaStack)  
+- **Gustavo Muñoz** – [@HTTPResponseG](https://github.com/HTTPResponseG)
 
-Envío automático de correos electrónicos al confirmar citas
+Durante este proyecto se aplicaron metodologías colaborativas con **Git** y **GitHub**, incluyendo:
 
-Panel administrativo completo
+- Creación de ramas individuales por desarrollador  
+- Uso de *Pull Requests (PR)* para revisión y aprobación de código  
+- Integración controlada mediante *merge* a la rama principal (`main`)  
+- Resolución de conflictos y comunicación constante en equipo  
 
-Seguridad integrada mediante el sistema de autenticación de Django
-
-##👥 Colaboradores
-
-Diego Roa – @RoaStack
-
-Gustavo Muñoz – @HTTPResponseG
-
-Durante este proyecto se aplicaron metodologías colaborativas con Git y GitHub, incluyendo:
-
-Creación de ramas individuales por desarrollador
-
-Uso de Pull Requests (PR) para revisión y aprobación de código
+---
 
 
-Integración controlada mediante merge a la rama principal (main)
-
-Resolución de conflictos y comunicación constante en equipo
 ```
-##📁 Estructura del proyecto
+## 📁 Estructura del proyecto
 barberia/
 ├── core/                  # App principal (inicio, vistas generales)
 ├── usuarios/              # Gestión de usuarios, roles y autenticación
