@@ -58,6 +58,7 @@ barberia/
 ├── manage.py              # Comando principal de Django
 └── README.md              # Documentación del proyecto
 ```
+---
 ⚙️ Instalación y ejecución local
 
 ##1️⃣ Clonar el repositorio
@@ -102,7 +103,7 @@ python manage.py runserver
 
 
 Luego accede a 👉 http://127.0.0.1:8000/
-
+---
 ##🔒 Seguridad
 
 El sistema incluye múltiples medidas de seguridad integradas:
@@ -116,14 +117,14 @@ Sesiones seguras y validación de permisos
 Encriptación de información sensible
 
 Validación y saneamiento de formularios
-
+---
 ##✉️ Envío de correos electrónicos
 
 El sistema utiliza SMTP configurado en settings.py para enviar notificaciones automáticas de reservas y confirmaciones.
 Solo debes configurar tus credenciales en el archivo .env.
-
+---
 ##🖼️ Capturas de pantalla
-
+---
 ##🧰 Tecnologías utilizadas
 
 Python 3.12+
@@ -135,7 +136,7 @@ HTML5 / CSS3 / Bootstrap 5
 SQLite3
 
 Render (para despliegue en la nube)
-
+---
 ##📜 Licencia
 
 MIT License
