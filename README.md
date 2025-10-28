@@ -61,6 +61,10 @@ barberia/
 └── README.md              # Documentación del proyecto
 ```
 ---
+## 🗃️​ Modelamiento Base De Datos
+![Home](assets/Base_de_datos.png)
+
+---
 ## ⚙️ Instalación y ejecución local
 1️⃣ Clonar el repositorio
 
