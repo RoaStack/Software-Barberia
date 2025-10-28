@@ -2,7 +2,9 @@
 
 Bienvenidos a **Barbería Elite**, un sistema web desarrollado con **Django** para la administración integral de una barbería.  
 Permite a los clientes reservar citas en línea, a los barberos gestionar sus horarios y a los administradores controlar servicios, usuarios y disponibilidad desde un panel centralizado.
+
 🌐 Demo en línea: https://software-barberia-staging.onrender.com/ adaptado como Barberia DonRinoSan
+
 ---
 
 ## 🌐 Descripción
