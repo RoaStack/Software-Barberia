@@ -60,25 +60,25 @@ barberia/
 ```
 ---
 ⚙️ Instalación y ejecución local
-
-##1️⃣ Clonar el repositorio
+## 1️⃣ clonar el repositorio
+1️⃣ Clonar el repositorio
 
 git clone https://github.com/tuusuario/software-barberia.git
 cd software-barberia
 
 
-##2️⃣ Crear y activar entorno virtual
+2️⃣ Crear y activar entorno virtual
 
 python -m venv venv
 source venv/bin/activate  # En Windows: venv\Scripts\activate
 
 
-##3️⃣ Instalar dependencias
+3️⃣ Instalar dependencias
 
 pip install -r requirements.txt
 
 
-##4️⃣ Configurar variables de entorno (.env)
+4️⃣ Configurar variables de entorno (.env)
 
 SECRET_KEY=tu_clave_secreta
 DEBUG=True
@@ -87,24 +87,24 @@ EMAIL_HOST_USER=tu_correo@empresa.com
 EMAIL_HOST_PASSWORD=tu_contraseña_de_app
 
 
-##5️⃣ Aplicar migraciones
+5️⃣ Aplicar migraciones
 
 python manage.py migrate
 
 
-##6️⃣ Crear un superusuario
+6️⃣ Crear un superusuario
 
 python manage.py createsuperuser
 
 
-##7️⃣ Ejecutar el servidor
+7️⃣ Ejecutar el servidor
 
 python manage.py runserver
 
 
 Luego accede a 👉 http://127.0.0.1:8000/
 ---
-##🔒 Seguridad
+🔒 Seguridad
 
 El sistema incluye múltiples medidas de seguridad integradas:
 
@@ -118,14 +118,14 @@ Encriptación de información sensible
 
 Validación y saneamiento de formularios
 ---
-##✉️ Envío de correos electrónicos
+✉️ Envío de correos electrónicos
 
 El sistema utiliza SMTP configurado en settings.py para enviar notificaciones automáticas de reservas y confirmaciones.
 Solo debes configurar tus credenciales en el archivo .env.
 ---
-##🖼️ Capturas de pantalla
+🖼️ Capturas de pantalla
 ---
-##🧰 Tecnologías utilizadas
+🧰 Tecnologías utilizadas
 
 Python 3.12+
 
@@ -137,7 +137,7 @@ SQLite3
 
 Render (para despliegue en la nube)
 ---
-##📜 Licencia
+📜 Licencia
 
 MIT License
 
